@@ -26,6 +26,7 @@
 *   Осуществлять все основные операции с данными в базе через **Spring Data JPA**.
 *   Использовать **Liquibase** для создания схемы базы данных и ее предзаполнения.
 
+[Ссылка на дизайн в Figma](https://www.figma.com/design/JNtOedygNqT8XIhb4t2hIY/Untitled?node-id=0-1&t=c7EsBRnSU7QN6vXo-1)
 
 ## User Story
 
