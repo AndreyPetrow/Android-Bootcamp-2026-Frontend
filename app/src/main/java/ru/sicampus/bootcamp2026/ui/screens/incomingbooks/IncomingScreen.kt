@@ -1,7 +1,9 @@
-package ru.sicampus.bootcamp2026.incomingbooks
+package ru.sicampus.bootcamp2026.ui.screens.incomingbooks
 
-import android.icu.util.TimeZone
+import android.app.Application
+import android.content.res.Resources
 import android.os.Build
+import android.provider.Settings.Global.getString
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,21 +31,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.sicampus.bootcamp2026.R
-import ru.sicampus.bootcamp2026.schedule.TestBookData
-import ru.sicampus.bootcamp2026.ui.theme.Typography
+import ru.sicampus.bootcamp2026.ui.screens.schedule.TestBookData
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.Calendar
-import java.util.Date
-import java.util.SimpleTimeZone
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -64,7 +64,8 @@ fun IncomingScreen(modifier: Modifier = Modifier) {
             Box(Modifier
                 .fillMaxWidth()
                 .height(60.dp).background(Color.White)) {
-                Text("Входящие", modifier = Modifier.padding(top = 20.dp, start = 20.dp),
+                Text(
+                    stringResource(R.string.incoming), modifier = Modifier.padding(top = 20.dp, start = 20.dp),
                     fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             }
         },
@@ -75,7 +76,7 @@ fun IncomingScreen(modifier: Modifier = Modifier) {
             items(listIncoming.value){
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Box(
-                        modifier = Modifier.fillMaxWidth(0.9f).height(150.dp).clip(
+                        modifier = Modifier.fillMaxWidth(0.9f).clip(
                             RoundedCornerShape(20.dp)
                         ).background(Color.White).align(Alignment.Center)
                     ) {
@@ -129,16 +130,17 @@ fun IncomingScreen(modifier: Modifier = Modifier) {
                                     modifier = Modifier.height(35.dp).weight(1f),
                                     shape = RoundedCornerShape(16.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC))) {
-                                        Text("Принять")
+                                        Text(stringResource(R.string.accept))
                                 }
                                 Spacer(Modifier.size(10.dp))
                                 Button(onClick = {},
                                     shape = RoundedCornerShape(16.dp),
                                     modifier = Modifier.height(35.dp).weight(1f),
                                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xffE6E6E6))) {
-                                        Text("Отклонить", color = Color.Black, fontWeight = FontWeight.SemiBold)
+                                        Text(stringResource(R.string.reject), color = Color.Black, fontWeight = FontWeight.SemiBold)
                                 }
                             }
+                            Spacer(Modifier.size(15.dp))
 
                         }
                     }
@@ -159,7 +161,9 @@ fun getDisplayDateIncome(l: Long): String{
     ){
         return "Завтра"
     }
-    return "${Instant.ofEpochMilli(l).atZone(ZoneId.systemDefault()).toLocalDate().month} ${Instant.ofEpochMilli(l).atZone(ZoneId.systemDefault()).toLocalDate().dayOfMonth}"
+    return "${Instant.ofEpochMilli(l).atZone(ZoneId.systemDefault()).toLocalDate().format(
+        DateTimeFormatter.ofPattern("d MMM", Locale("ru"))
+    )}"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

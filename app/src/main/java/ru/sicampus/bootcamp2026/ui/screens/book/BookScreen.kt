@@ -1,8 +1,7 @@
-package ru.sicampus.bootcamp2026.book
+package ru.sicampus.bootcamp2026.ui.screens.book
 
 
 import android.os.Build
-import android.text.Layout
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -28,7 +27,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -52,7 +50,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
@@ -60,16 +57,19 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
-import ru.sicampus.bootcamp2026.navigation.ItemsNav
+import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
+import ru.sicampus.bootcamp2026.ui.theme.BackgroundColor
+import ru.sicampus.bootcamp2026.ui.theme.BlueMain
+import ru.sicampus.bootcamp2026.ui.theme.GrayTextColor
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -92,7 +92,7 @@ fun BookScreen(navHostController: NavHostController) {
     if (currentTime.value.minute != 0) currentTime.value = currentTime.value.plusHours(1).minusMinutes(currentTime.value.minute.toLong())
     Box(contentAlignment = Alignment.Center) {
         Column(
-            Modifier.fillMaxSize().background(Color(0xffEEEEEE)),
+            Modifier.fillMaxSize().background(BackgroundColor),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(Modifier.height(50.dp).fillMaxWidth().shadow(3.dp, RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp)).background(Color.White)) {
@@ -101,13 +101,13 @@ fun BookScreen(navHostController: NavHostController) {
                         navHostController.navigate(ItemsNav.BottomNavItems[0].route)
                     }, modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "отмена", color = Color(0xff6E6C6C),
+                            text = stringResource(R.string.cancel), color = GrayTextColor,
                             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Start,
                             fontSize = 16.sp
                         )
                     }
                     Text(
-                        "Новая встреча",
+                        stringResource(R.string.new_meet),
                         Modifier.align(Alignment.CenterVertically).weight(2f),
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center,
@@ -118,7 +118,7 @@ fun BookScreen(navHostController: NavHostController) {
                         navHostController.navigate(ItemsNav.BottomNavItems[0].route)
                     }, modifier = Modifier.weight(1f)) {
                         Text(
-                            "Готово", color = Color(0xff155DFC),
+                            stringResource(R.string.success), color = BlueMain,
                             modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End,
                             fontSize = 16.sp
                         )
@@ -128,38 +128,38 @@ fun BookScreen(navHostController: NavHostController) {
 
 
             Text(
-                "Основное",
+                stringResource(R.string.main_word),
                 Modifier.fillMaxWidth().padding(start = 16.dp, top = 16.dp, bottom = 10.dp),
-                color = Color(0xff6E6C6C),
+                color = GrayTextColor,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
             CustomTextField2(
                 value = labelText.value, onValueChange = { labelText.value = it },
-                placeholder = "Название", modifier = Modifier.padding(horizontal = 16.dp).shadow(3.dp, RoundedCornerShape(15.dp)),
+                placeholder = stringResource(R.string.label), modifier = Modifier.padding(horizontal = 16.dp).shadow(3.dp, RoundedCornerShape(15.dp)),
                 height = 50
             )
             CustomTextField2(
                 value = descText.value,
                 onValueChange = { descText.value = it },
-                placeholder = "Описание или повестка",
+                placeholder = stringResource(R.string.description),
                 modifier = Modifier.height(110.dp).padding(start = 16.dp, end = 16.dp, top = 8.dp)
                     .shadow(3.dp, RoundedCornerShape(15.dp)),
                 height = 110
             )
             Text(
-                "Время и место",
+                stringResource(R.string.date_and_place),
                 modifier = Modifier.fillMaxWidth().padding(top = 25.dp, start = 16.dp),
-                color = Color(0xff6E6C6C),
+                color = GrayTextColor,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
             DatePickerForBook(currentDate, currentTime, cabinet =  cabinet, enabled1 =  showDateP, enabled2 =  showTimeP,
                 endTime =  endTime)
             Text(
-                "Участники",
+                stringResource(R.string.participant),
                 modifier = Modifier.fillMaxWidth().padding(top = 20.dp, start = 16.dp),
-                color = Color(0xff6E6C6C),
+                color = GrayTextColor,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
@@ -179,7 +179,7 @@ fun BookScreen(navHostController: NavHostController) {
                         )
                         Spacer(Modifier.size(10.dp))
                         Text(
-                            "Добавить участников", fontSize = 16.sp, color = Color.Black.copy(0.6f),
+                            stringResource(R.string.add_participant), fontSize = 16.sp, color = Color.Black.copy(0.6f),
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
                     }
@@ -231,19 +231,19 @@ fun TimePicker1(
             state = timePickerState,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = TimePickerDefaults.colors(clockDialColor = Color.White,
-                selectorColor = Color(0xff155DFC).copy(0.8f),
+                selectorColor = BlueMain.copy(0.8f),
                 timeSelectorSelectedContainerColor = Color(0xff155DFC).copy(0.4f),
                 timeSelectorUnselectedContainerColor = Color.White)
         )
         Row(Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 15.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             TextButton(onClick = onDismiss) {
-                Text("Отмена", color = Color(0xff636363))
+                Text(stringResource(R.string.cancel), color = GrayTextColor)
             }
             TextButton(onClick = {currentTime.value = currentTime.value.withHour(timePickerState.hour)
                 .withMinute(timePickerState.minute)
                 onCon()
             }) {
-                Text("Подтвердить", color = Color(0xff155DFC))
+                Text(stringResource(R.string.confirm), color = BlueMain)
             }
         }
     }
@@ -265,19 +265,19 @@ fun DatePickerModal(
                 onDateSelected(datePickerState.selectedDateMillis)
                 onDismiss()
             }) {
-                Text("OK", color = Color(0xff155DFC))
+                Text(stringResource(R.string.ok), color = BlueMain)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color(0xff6E6C6C))
+                Text(stringResource(R.string.cancel), color = Color(0xff6E6C6C))
             }
         }
     ) {
         DatePicker(state = datePickerState, colors = DatePickerDefaults.colors(containerColor = Color.White,
-            selectedDayContainerColor = Color(0xff155DFC).copy(0.8f),
-            todayDateBorderColor = Color(0xff155DFC).copy(0.8f),
-            todayContentColor = Color(0xff155DFC).copy(0.8f)))
+            selectedDayContainerColor = BlueMain.copy(0.8f),
+            todayDateBorderColor = BlueMain.copy(0.8f),
+            todayContentColor = BlueMain.copy(0.8f)))
     }
 }
 
@@ -294,7 +294,6 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
     endTime.value = currentTime.value.plusHours(1)
     Box(Modifier
         .padding(start = 16.dp, end = 16.dp, top = 10.dp)
-        .height(148.dp)
         .shadow(3.dp, RoundedCornerShape(15.dp))
         .clip(RoundedCornerShape(15.dp))
         .background(Color.White)) {
@@ -302,8 +301,8 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
             Row(Modifier.fillMaxWidth().padding(start = 15.dp), horizontalArrangement =
                 Arrangement.SpaceBetween) {
                 Column() {
-                    Text("Дата", fontSize = 12.sp,
-                        color = Color(0xff636363),
+                    Text(stringResource(R.string.date), fontSize = 12.sp,
+                        color = GrayTextColor,
                         modifier = Modifier.padding(top = 10.dp),
                         fontWeight = FontWeight.SemiBold
                     )
@@ -322,8 +321,8 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
             Row(Modifier.height(48.dp)) {
                 Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.weight(1f)) {
                     Column(Modifier.padding(top = 5.dp, start = 14.dp)) {
-                        Text("Начало", fontSize = 12.sp,
-                            color = Color(0xff636363),
+                        Text(stringResource(R.string.start), fontSize = 12.sp,
+                            color = GrayTextColor,
                             fontWeight = FontWeight.SemiBold)
                         Text(currentTime.value.format(DateTimeFormatter.ofPattern(
                             "HH:mm", Locale("ru")
@@ -339,8 +338,8 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
                 Row(Modifier.weight(1f)) {
                     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.weight(1f)) {
                         Column(Modifier.padding(top = 5.dp, start = 14.dp)) {
-                            Text("Конец", fontSize = 12.sp,
-                                color = Color(0xff636363),
+                            Text(stringResource(R.string.end), fontSize = 12.sp,
+                                color = GrayTextColor,
                                 fontWeight = FontWeight.SemiBold)
                             Text(endTime.value.format(DateTimeFormatter.ofPattern(
                                 "HH:mm", Locale("ru")
@@ -357,14 +356,15 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
             HorizontalDivider()
             Row() {
                 Column(Modifier.padding(start = 13.dp, top = 4.dp)) {
-                    Text("Кабинет", fontSize = 12.sp,
-                        color = Color(0xff636363),
+                    Text(stringResource(R.string.cabinet), fontSize = 12.sp,
+                        color = GrayTextColor,
                         fontWeight = FontWeight.SemiBold)
                     Text(cabinet.value, fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(top = 6.dp))
                 }
             }
+            Spacer(Modifier.size(10.dp))
         }
     }
 }
@@ -394,7 +394,7 @@ fun CustomTextField2(
             )
             .border(
                 width = 1.dp,
-                color = if (isFocused) Color(0xff155DFC).copy(alpha = 0.6f)
+                color = if (isFocused) BlueMain.copy(alpha = 0.6f)
                 else Color.LightGray.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(15.dp)
             )
@@ -442,7 +442,7 @@ fun CustomTextField2(
                         if (value.isEmpty()) {
                             Text(
                                 text = placeholder,
-                                color = Color(0xff636363),
+                                color =GrayTextColor,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold
                             )

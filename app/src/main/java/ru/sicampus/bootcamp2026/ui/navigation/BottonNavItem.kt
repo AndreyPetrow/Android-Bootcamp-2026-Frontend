@@ -1,4 +1,4 @@
-package ru.sicampus.bootcamp2026.navigation
+package ru.sicampus.bootcamp2026.ui.navigation
 
 import androidx.compose.ui.graphics.painter.Painter
 import ru.sicampus.bootcamp2026.R

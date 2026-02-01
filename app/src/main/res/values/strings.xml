@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">Android-Bootcamp-2026-Frontend</string>
+    <string name="app_name_label">BookRoom</string>
+    <string name="app_name_desk">Бронирование кабинетов</string>
+    <string name="login">Войти</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="search">Поиск пользователей</string>
+    <string name="post">Должность</string>
+    <string name="department">Отдел</string>
+    <string name="about">О себе</string>
+    <string name="edit">Редактировать</string>
+    <string name="logout">Выйти из аккаунта</string>
+    <string name="new_meet">Новая встреча</string>
+    <string name="cancel">отмена</string>
+    <string name="success">Готово</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="ok">OK</string>
+    <string name="label">Название</string>
+    <string name="main_word">Основное</string>
+    <string name="description">Описание или повестка</string>
+    <string name="date_and_place">Время и место</string>
+    <string name="participant">участник</string>
+    <string name="date">Дата</string>
+    <string name="start">Начало</string>
+    <string name="end">Конец</string>
+    <string name="cabinet">Кабинет</string>
+    <string name="add_participant">Добавить участников</string>
+    <string name="incoming">Входящие</string>
+    <string name="accept">Принять</string>
+    <string name="reject">Отклонить</string>
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
 </resources>

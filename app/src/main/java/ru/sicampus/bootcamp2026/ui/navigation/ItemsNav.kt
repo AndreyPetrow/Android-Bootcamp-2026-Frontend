@@ -1,4 +1,4 @@
-package ru.sicampus.bootcamp2026.navigation
+package ru.sicampus.bootcamp2026.ui.navigation
 
 
 import ru.sicampus.bootcamp2026.R
@@ -12,7 +12,7 @@ object ItemsNav {
         ),
         BottomNavItem(
             label = "Входящие",
-            icon = R.drawable.image,
+            icon = R.drawable.mail,
             route = "incoming"
         ),
         BottomNavItem(

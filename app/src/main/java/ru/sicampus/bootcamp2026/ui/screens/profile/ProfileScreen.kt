@@ -1,11 +1,9 @@
-package ru.sicampus.bootcamp2026.profile
+package ru.sicampus.bootcamp2026.ui.screens.profile
 
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,9 +34,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -60,12 +57,12 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     onValueChange = { searchText.value = it },
                     label = {
                         Text(
-                            "Поиск пользователей", style =
+                            stringResource(R.string.search), style =
                                 Typography.bodyLarge, color = Color(0xff49454F)
                         )
                     },
                     shape = RoundedCornerShape(15.dp),
-                    modifier = Modifier.height(55.dp).zIndex(1f).fillMaxWidth(0.95f)
+                    modifier = Modifier.zIndex(1f).fillMaxWidth(0.95f)
                 )
             LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             item {
@@ -76,7 +73,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     ), contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painterResource(R.drawable.iconperson), "", Modifier.size(130.dp),
+                        painterResource(R.drawable.profile), "", Modifier.size(130.dp),
                         tint = Color.White
                     )
 
@@ -107,7 +104,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                "Должность", fontSize = 14.sp, color = Color(0xff636363),
+                                stringResource(R.string.post), fontSize = 14.sp, color = Color(0xff636363),
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(Modifier.size(4.dp))
@@ -119,7 +116,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                "Отдел", fontSize = 14.sp, color = Color(0xff636363),
+                                stringResource(R.string.department), fontSize = 14.sp, color = Color(0xff636363),
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(Modifier.size(4.dp))
@@ -138,7 +135,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                             )
                             Spacer(modifier = Modifier.size(5.dp))
                             Text(
-                                "О себе",
+                                stringResource(R.string.about),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = Color(0xff636363)
@@ -156,7 +153,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                         )
                 ) {
                     Text(
-                        "Редактировать",
+                        stringResource(R.string.edit),
                         color = Color(0xff0A266C),
                         modifier = Modifier.align(Alignment.Center),
                         textAlign = TextAlign.Center,
@@ -175,10 +172,11 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        androidx.compose.foundation.Image(painterResource(R.drawable.exit_icon), "")
+                        Icon(painterResource(R.drawable.exit_icon), "",
+                            tint = Color(0xffD50000))
                         Spacer(Modifier.size(5.dp))
                         Text(
-                            "Выйти из аккаунта", color = Color(0xffD50000),
+                            stringResource(R.string.logout), color = Color(0xffD50000),
                             style = Typography.bodyLarge, fontWeight = FontWeight.SemiBold
                         )
                     }

@@ -1,8 +1,7 @@
-package ru.sicampus.bootcamp2026.schedule
+package ru.sicampus.bootcamp2026.ui.screens.schedule
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,12 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -43,18 +40,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
-import ru.sicampus.bootcamp2026.navigation.ItemsNav
-import java.sql.Date
+import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
+import ru.sicampus.bootcamp2026.ui.theme.BlueMain
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -113,7 +109,8 @@ fun ScheduleScreen(modifier: Modifier = Modifier,
                 ) {
                     DatePick(currentDate)
                     var selectedIndex by remember { mutableIntStateOf(0) }
-                    val options = listOf("День", "Неделя", "Месяц")
+                    val options = listOf(stringResource(R.string.day), stringResource(R.string.week),
+                        stringResource(R.string.month))
                     Spacer(Modifier.size(10.dp))
                     SingleChoiceSegmentedButtonRow(
                         modifier = Modifier
@@ -148,7 +145,6 @@ fun ScheduleScreen(modifier: Modifier = Modifier,
             ) {
                 items(listBooks.value) {
                     Card(modifier = Modifier
-                        .height(130.dp)
                         .fillMaxWidth(0.9f),
                         colors = CardDefaults.cardColors(containerColor = Color.White)) {
                         Row(Modifier.fillMaxSize()) {
@@ -161,9 +157,11 @@ fun ScheduleScreen(modifier: Modifier = Modifier,
                                             bottomStart = 15.dp
                                         )
                                     )
-                                    .fillMaxHeight()
-                                    .background(Color(0xff155DFC).copy(0.7f))
+                                    .zIndex(1f)
+                                    .height(135.dp)
+                                    .background(BlueMain.copy(0.7f))
                             )
+
                             Column(
                                 Modifier.padding(
                                     top = 15.dp,
@@ -190,7 +188,7 @@ fun ScheduleScreen(modifier: Modifier = Modifier,
                                 }
                                 Spacer(Modifier.size(5.dp))
                                 Text(
-                                    it?.description ?: "null",
+                                    it?.description ?: "Indefinite",
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Color.Black.copy(0.5f)
@@ -201,10 +199,11 @@ fun ScheduleScreen(modifier: Modifier = Modifier,
                                         color = Color(0xffEFF6FF)
                                     )) {
                                         Row() {
-                                            Image(
+                                            Icon(
                                                 painterResource(R.drawable.clock), "",
-                                                Modifier.size(32.dp).padding(start = 2.dp, end = 2.dp,
-                                                    top = 4.dp, bottom = 4.dp)
+                                                Modifier.size(24.dp).padding(start = 2.dp, end = 2.dp,
+                                                    top = 4.dp, bottom = 4.dp),
+                                                tint = Color(0xff6151E8)
                                             )
                                             Text("${it?.timeStart}-${it?.timeEnd}", color = Color(0xff6151E8),
                                                 fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
@@ -216,9 +215,9 @@ fun ScheduleScreen(modifier: Modifier = Modifier,
                                         color = Color(0xffDEDEDE)
                                     )) {
                                         Row() {
-                                            Image(
+                                            Icon(
                                                 painterResource(R.drawable.location), "",
-                                                Modifier.size(32.dp).padding(start = 1.dp, end = 1.dp,
+                                                Modifier.size(24.dp).padding(start = 1.dp, end = 1.dp,
                                                     top = 4.dp, bottom = 4.dp)
                                             )
                                             Text(it?.address ?:"Undefinite", color = Color.Black,
@@ -230,6 +229,7 @@ fun ScheduleScreen(modifier: Modifier = Modifier,
 
 
                             }
+
                         }
                     }
                 }

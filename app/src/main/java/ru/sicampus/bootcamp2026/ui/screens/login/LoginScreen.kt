@@ -1,9 +1,8 @@
-package ru.sicampus.bootcamp2026.login
+package ru.sicampus.bootcamp2026.ui.screens.login
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -61,7 +62,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                     elevation = 10.dp,
                     shape = RoundedCornerShape(50.dp)
                 )
-                .height(460.dp)
                 .width(360.dp)
                 .clip(RoundedCornerShape(50.dp))
                 .align(Alignment.Center),
@@ -70,17 +70,19 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             Column(Modifier.align(Alignment.CenterHorizontally), horizontalAlignment =
                 Alignment.CenterHorizontally) {
                 Spacer(Modifier.size(25.dp))
-                Image(painterResource(R.drawable.app_icon), "", modifier = Modifier.size(90.dp))
-                Text("BookRoom", fontSize = 45.sp, fontWeight = FontWeight.ExtraBold)
-                Text("Бронирование кабинетов", fontSize = 20.sp, fontWeight = FontWeight.Normal, modifier = Modifier.alpha(0.7f))
+                Icon(painterResource(R.drawable.app_icon), "", modifier = Modifier.size(90.dp),
+                    tint = Color(0xff155DFC))
+                Text(stringResource(R.string.app_name_label), fontSize = 45.sp, fontWeight = FontWeight.ExtraBold)
+                Text(stringResource(R.string.app_name_desk), fontSize = 20.sp, fontWeight = FontWeight.Normal, modifier = Modifier.alpha(0.7f))
                 Spacer(Modifier.size(45.dp))
-                CustomTextField1(value = emailText, onValueChange = {emailText = it}, placeholder = "Email")
+                CustomTextField1(value = emailText, onValueChange = {emailText = it}, placeholder = stringResource(R.string.email))
                 Spacer(Modifier.size(20.dp))
-                CustomTextField1(value = passText, onValueChange = {passText = it}, placeholder = "Password")
+                CustomTextField1(value = passText, onValueChange = {passText = it}, placeholder = stringResource(R.string.password))
                 Spacer(Modifier.size(20.dp))
                 Button(onClick = {}, modifier = Modifier.height(53.dp).fillMaxWidth(0.9f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC))) {
-                    Text("Войти", fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.login), fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
                 }
+                Spacer(Modifier.size(25.dp))
             }
         }
     }
