@@ -3,8 +3,10 @@
     <string name="app_name_label">BookRoom</string>
     <string name="app_name_desk">Бронирование кабинетов</string>
     <string name="login">Войти</string>
+    <string name="signup">Зарегистрироваться</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
+    <string name="repeat_password">Повторите пароль</string>
     <string name="search">Поиск пользователей</string>
     <string name="post">Должность</string>
     <string name="department">Отдел</string>
@@ -32,4 +34,6 @@
     <string name="day">День</string>
     <string name="week">Неделя</string>
     <string name="month">Месяц</string>
+    <string name="person_name">Имя</string>
+    <string name="person_surname">Фамилия</string>
 </resources>
