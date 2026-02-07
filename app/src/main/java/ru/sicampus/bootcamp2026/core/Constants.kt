@@ -8,6 +8,9 @@ object Constants {
     const val LOGIN_ENDPOINT = "/api/v1/auth/login"
     const val REGISTER_ENDPOINT = "/api/v1/auth/register"
 
+    // user
+    const val GET_BY_ID_ENDPOINT = "/api/v1/users/"
+
 }
 
 /*
