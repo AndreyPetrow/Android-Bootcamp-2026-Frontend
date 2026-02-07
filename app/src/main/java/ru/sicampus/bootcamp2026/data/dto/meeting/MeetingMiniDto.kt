@@ -12,8 +12,8 @@ data class MeetingMiniDto(
     @SerialName("title") val title: String,
     @SerialName("description") val description: String? = null,
     @SerialName("address") val address: String,
-    @SerialName("date") val date: LocalDate,
-    @SerialName("timeStart") val timeStart: LocalDateTime,
-    @SerialName("timeEnd") val timeEnd: LocalDateTime,
+    @SerialName("date") val date: String,
+    @SerialName("timeStart") val timeStart: String,
+    @SerialName("timeEnd") val timeEnd: String,
     @SerialName("organizer") val organizer: UserMiniDto
 )
