@@ -85,7 +85,7 @@ fun BookScreen(navHostController: NavHostController) {
     val endTime = remember { mutableStateOf(currentTime.value.plusHours(1))}
     val labelText = remember { mutableStateOf("") }
     val descText = remember { mutableStateOf("") }
-    val cabinet = remember { mutableStateOf("Не выбрано") }
+    val cabinet = remember { mutableStateOf("") }
     val personCounter = remember { mutableStateOf(0) }
     var showDateP = remember { mutableStateOf(false) }
     var showTimeP = remember { mutableStateOf(false) }
@@ -355,16 +355,20 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
             }
             HorizontalDivider()
             Row() {
-                Column(Modifier.padding(start = 13.dp, top = 4.dp)) {
+                Column(Modifier.padding(start = 5.dp, top = 4.dp)) {
                     Text(stringResource(R.string.cabinet), fontSize = 12.sp,
                         color = GrayTextColor,
                         fontWeight = FontWeight.SemiBold)
-                    Text(cabinet.value, fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(top = 6.dp))
+                    CustomTextField3(
+                        value = cabinet.value,
+                        onValueChange = {cabinet.value = it},
+                        placeholder = "Не выбрано",
+                        height =  30,
+                        modifier = Modifier.padding(end = 5.dp)
+                    )
                 }
             }
-            Spacer(Modifier.size(10.dp))
+            Spacer(Modifier.size(5.dp))
         }
     }
 }
@@ -399,6 +403,92 @@ fun CustomTextField2(
                 shape = RoundedCornerShape(15.dp)
             )
             .clip(RoundedCornerShape(15.dp))
+            .background(
+                color = if (enabled) Color.White else Color.LightGray
+            )
+            .clickable(
+                enabled = enabled,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { focusRequester.requestFocus() },
+        color = Color.Transparent
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 4.dp)
+        ) {
+            Spacer(modifier = Modifier.width(1.dp))
+
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                modifier = Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { focusState ->
+                        isFocused = focusState.isFocused
+                    }
+                    .height(height.dp)
+                    .fillMaxWidth(0.9f),
+                enabled = enabled,
+                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+                textStyle = TextStyle(
+                    color = if (enabled) Color.Black else Color.Gray,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal
+                ),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = if (height != 110) Alignment.CenterStart else Alignment.TopStart
+                    ) {
+                        if (value.isEmpty()) {
+                            Text(
+                                text = placeholder,
+                                color =GrayTextColor,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
+            )
+        }
+    }
+}
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CustomTextField3(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    height: Int
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val elevation by animateDpAsState(
+        targetValue = if (isFocused) 8.dp else 0.dp,
+        animationSpec = tween(durationMillis = 200)
+    )
+
+    Surface(
+        modifier = modifier
+            .shadow(
+                elevation = elevation,
+                shape = RoundedCornerShape(bottomStart =  15.dp, bottomEnd = 15.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = if (isFocused) BlueMain.copy(alpha = 0.6f)
+                else Color.LightGray.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(bottomStart =  15.dp, bottomEnd = 15.dp)
+            )
+            .clip(RoundedCornerShape(bottomStart =  15.dp, bottomEnd = 15.dp))
             .background(
                 color = if (enabled) Color.White else Color.LightGray
             )

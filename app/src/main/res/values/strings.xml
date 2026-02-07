@@ -26,9 +26,10 @@
     <string name="date">Дата</string>
     <string name="start">Начало</string>
     <string name="end">Конец</string>
-    <string name="cabinet">Кабинет</string>
+    <string name="cabinet">Место проведения</string>
     <string name="add_participant">Добавить участников</string>
     <string name="incoming">Входящие</string>
+    <string name="details">Детали встречи</string>
     <string name="accept">Принять</string>
     <string name="reject">Отклонить</string>
     <string name="day">День</string>

@@ -46,7 +46,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun IncomingScreen(modifier: Modifier = Modifier) {
     val listIncoming = remember { mutableStateOf<MutableList<TestBookData>>(
