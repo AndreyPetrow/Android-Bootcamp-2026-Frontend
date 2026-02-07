@@ -1,107 +1,55 @@
 package ru.sicampus.bootcamp2026.data.repository
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingDto
-import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto
-import ru.sicampus.bootcamp2026.data.source.ApiClient
-import ru.sicampus.bootcamp2026.data.source.ApiClientImpl
+import ru.sicampus.bootcamp2026.data.source.dataSource.MeetingDataSource
+import ru.sicampus.bootcamp2026.domain.entities.InvitationStatus
+import ru.sicampus.bootcamp2026.domain.entities.MeetingMini
+import ru.sicampus.bootcamp2026.domain.mapper.MeetingMapper
 import java.time.LocalDate
 
-interface MeetingRepository {
-    suspend fun createMeeting(meetingData: Map<String, Any>): Result<MeetingDto>
-    suspend fun getMeetingById(id: Long): Result<MeetingDto>
-    suspend fun getDaySchedule(day: LocalDate): Result<List<MeetingMiniDto>>
-    suspend fun getWeekSchedule(year: Int, week: Int): Result<List<MeetingMiniDto>>
-    suspend fun getMonthSchedule(year: Int, month: Int): Result<List<MeetingMiniDto>>
-    suspend fun getInvitations(status: String = "pending"): Result<List<MeetingMiniDto>>
-    suspend fun respondToInvitation(meetingId: Long, response: Boolean): Result<Unit>
-}
+class MeetingRepository(
+    private val meetingDataSource: MeetingDataSource
+) {
+//    suspend fun createMeeting(meetingCreate: MeetingCreate): Result<Meeting> {
+//        return meetingDataSource.createMeeting(MeetingMapper.toDto(meetingCreate)).map { meetingDto ->
+//            MeetingMapper.toDomain(meetingDto)
+//        }
+//    }
 
-class MeetingRepositoryImpl(
-    private val client: HttpClient = ApiClientImpl().client
-) : MeetingRepository {
+//    suspend fun getMeetingById(id: Long): Result<Meeting> {
+//        return meetingDataSource.getMeetingById(id).map { meetingDto ->
+//            MeetingMapper.toDomain(meetingDto)
+//        }
+//    }
 
-    override suspend fun createMeeting(meetingData: Map<String, Any>): Result<MeetingDto> {
-        return try {
-            // TODO: Заменить на реальный endpoint
-            val response = client.post("http://10.0.2.2:8080/api/v1/meeting/create") {
-                contentType(ContentType.Application.Json)
-                setBody(meetingData)
+    suspend fun getDaySchedule(day: LocalDate): Result<List<MeetingMini>> {
+        return meetingDataSource.getDaySchedule(day).map { meetingMiniDtos ->
+            meetingMiniDtos.map { MeetingMapper.toDomain(it) }
+        }
+    }
+
+    suspend fun getWeekSchedule(year: Int, week: Int): Result<Map<LocalDate, List<MeetingMini>>> {
+        return meetingDataSource.getWeekSchedule(year, week).map { map ->
+            map.mapKeys { LocalDate.parse(it.key) }.mapValues { entry ->
+                entry.value.map { MeetingMapper.toDomain(it) }
             }
-            val meetingDto = response.body<MeetingDto>()
-            Result.success(meetingDto)
-        } catch (e: Exception) {
-            Result.failure(e)
         }
     }
 
-    override suspend fun getMeetingById(id: Long): Result<MeetingDto> {
-        return try {
-            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/$id")
-            val meetingDto = response.body<MeetingDto>()
-            Result.success(meetingDto)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getDaySchedule(day: LocalDate): Result<List<MeetingMiniDto>> {
-        return try {
-            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/schedule/day?day=$day")
-            val meetings = response.body<List<MeetingMiniDto>>()
-            Result.success(meetings)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getWeekSchedule(year: Int, week: Int): Result<List<MeetingMiniDto>> {
-        return try {
-            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/schedule/week?year=$year&week=$week")
-            val meetings = response.body<List<MeetingMiniDto>>()
-            Result.success(meetings)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getMonthSchedule(year: Int, month: Int): Result<List<MeetingMiniDto>> {
-        return try {
-            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/schedule/month?year=$year&month=$month")
-            val meetings = response.body<List<MeetingMiniDto>>()
-            Result.success(meetings)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getInvitations(status: String): Result<List<MeetingMiniDto>> {
-        return try {
-            // TODO: Заменить на реальный endpoint (возможно из контроллера приглашений)
-            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/invitations?status=$status")
-            val invitations = response.body<List<MeetingMiniDto>>()
-            Result.success(invitations)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun respondToInvitation(meetingId: Long, response: Boolean): Result<Unit> {
-        return try {
-            // TODO: Заменить на реальный endpoint
-            client.post("http://10.0.2.2:8080/api/v1/meeting/$meetingId/respond") {
-                contentType(ContentType.Application.Json)
-                setBody(mapOf("response" to response))
+    suspend fun getMonthSchedule(year: Int, month: Int): Result<Map<LocalDate, List<MeetingMini>>> {
+        return meetingDataSource.getMonthSchedule(year, month).map { map ->
+            map.mapKeys { LocalDate.parse(it.key) }.mapValues { entry ->
+                entry.value.map { MeetingMapper.toDomain(it) }
             }
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
         }
+    }
+
+//    suspend fun getInvitations(): Result<List<Invitation>> {
+//        return meetingDataSource.getInvitations().map { invitationDtos ->
+//            invitationDtos.map { InvitationMapper.toDomain(it) }
+//        }
+//    }
+
+    suspend fun respondToInvitation(invitationId: Long, status: InvitationStatus): Result<Unit> {
+        return meetingDataSource.respondToInvitation(invitationId, status)
     }
 }
