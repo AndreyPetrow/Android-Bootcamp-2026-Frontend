@@ -1,7 +1,6 @@
 package ru.sicampus.bootcamp2026.data.source
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -29,7 +28,7 @@ class ApiClientImpl : ApiClient {
     private var authToken: String? = null
 
     // Создаем клиент как свойство класса
-    private val client by lazy {
+    val client by lazy {
         HttpClient(CIO) {
             install(ContentNegotiation) {
                 json(Json {

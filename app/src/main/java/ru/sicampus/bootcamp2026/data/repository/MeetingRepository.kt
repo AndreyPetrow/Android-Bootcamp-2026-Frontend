@@ -1,27 +1,41 @@
 package ru.sicampus.bootcamp2026.data.repository
 
-import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingCreateDto
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingDto
 import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto
 import ru.sicampus.bootcamp2026.data.source.ApiClient
-import ru.sicampus.bootcamp2026.data.source.DataStoreManager
+import ru.sicampus.bootcamp2026.data.source.ApiClientImpl
 import java.time.LocalDate
 
 interface MeetingRepository {
-    suspend fun createMeeting(meetingData: MeetingCreateDto): Result<MeetingDto>
+    suspend fun createMeeting(meetingData: Map<String, Any>): Result<MeetingDto>
     suspend fun getMeetingById(id: Long): Result<MeetingDto>
     suspend fun getDaySchedule(day: LocalDate): Result<List<MeetingMiniDto>>
-    suspend fun getWeekSchedule(year: Int, week: Int): Result<Map<String, List<MeetingMiniDto>>>
-    suspend fun getMonthSchedule(year: Int, month: Int): Result<Map<String, List<MeetingMiniDto>>>
-    suspend fun getInvitations(): Result<List<ru.sicampus.bootcamp2026.data.dto.invitation.InvitationDto>>
-    suspend fun respondToInvitation(invitationId: Long, status: String): Result<Unit>
+    suspend fun getWeekSchedule(year: Int, week: Int): Result<List<MeetingMiniDto>>
+    suspend fun getMonthSchedule(year: Int, month: Int): Result<List<MeetingMiniDto>>
+    suspend fun getInvitations(status: String = "pending"): Result<List<MeetingMiniDto>>
+    suspend fun respondToInvitation(meetingId: Long, response: Boolean): Result<Unit>
 }
 
-class MeetingRepositoryImpl : MeetingRepository {
+class MeetingRepositoryImpl(
+    private val client: HttpClient = ApiClientImpl().client
+) : MeetingRepository {
 
-    override suspend fun createMeeting(meetingData: MeetingCreateDto): Result<MeetingDto> {
+    override suspend fun createMeeting(meetingData: Map<String, Any>): Result<MeetingDto> {
         return try {
-            ApiClient.post<MeetingDto, MeetingCreateDto>("meetings/create", meetingData)
+            // TODO: Заменить на реальный endpoint
+            val response = client.post("http://10.0.2.2:8080/api/v1/meeting/create") {
+                contentType(ContentType.Application.Json)
+                setBody(meetingData)
+            }
+            val meetingDto = response.body<MeetingDto>()
+            Result.success(meetingDto)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -29,7 +43,9 @@ class MeetingRepositoryImpl : MeetingRepository {
 
     override suspend fun getMeetingById(id: Long): Result<MeetingDto> {
         return try {
-            ApiClient.get("meetings/$id")
+            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/$id")
+            val meetingDto = response.body<MeetingDto>()
+            Result.success(meetingDto)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -37,52 +53,53 @@ class MeetingRepositoryImpl : MeetingRepository {
 
     override suspend fun getDaySchedule(day: LocalDate): Result<List<MeetingMiniDto>> {
         return try {
-            val params = mapOf("day" to day.toString())
-            ApiClient.getWithParams("meetings/schedule/day", params)
+            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/schedule/day?day=$day")
+            val meetings = response.body<List<MeetingMiniDto>>()
+            Result.success(meetings)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getWeekSchedule(year: Int, week: Int): Result<Map<String, List<MeetingMiniDto>>> {
+    override suspend fun getWeekSchedule(year: Int, week: Int): Result<List<MeetingMiniDto>> {
         return try {
-            val params = mapOf(
-                "year" to year.toString(),
-                "week" to week.toString()
-            )
-            ApiClient.getWithParams("meetings/schedule/week", params)
+            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/schedule/week?year=$year&week=$week")
+            val meetings = response.body<List<MeetingMiniDto>>()
+            Result.success(meetings)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getMonthSchedule(year: Int, month: Int): Result<Map<String, List<MeetingMiniDto>>> {
+    override suspend fun getMonthSchedule(year: Int, month: Int): Result<List<MeetingMiniDto>> {
         return try {
-            val params = mapOf(
-                "year" to year.toString(),
-                "month" to month.toString()
-            )
-            ApiClient.getWithParams("meetings/schedule/month", params)
+            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/schedule/month?year=$year&month=$month")
+            val meetings = response.body<List<MeetingMiniDto>>()
+            Result.success(meetings)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun getInvitations(): Result<List<ru.sicampus.bootcamp2026.data.dto.invitation.InvitationDto>> {
+    override suspend fun getInvitations(status: String): Result<List<MeetingMiniDto>> {
         return try {
-            ApiClient.get("invitation")
+            // TODO: Заменить на реальный endpoint (возможно из контроллера приглашений)
+            val response = client.get("http://10.0.2.2:8080/api/v1/meeting/invitations?status=$status")
+            val invitations = response.body<List<MeetingMiniDto>>()
+            Result.success(invitations)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun respondToInvitation(invitationId: Long, status: String): Result<Unit> {
+    override suspend fun respondToInvitation(meetingId: Long, response: Boolean): Result<Unit> {
         return try {
-            val body = mapOf(
-                "invitationId" to invitationId,
-                "status" to status
-            )
-            ApiClient.put<Unit, Map<String, Any>>("invitation/respond", body)
+            // TODO: Заменить на реальный endpoint
+            client.post("http://10.0.2.2:8080/api/v1/meeting/$meetingId/respond") {
+                contentType(ContentType.Application.Json)
+                setBody(mapOf("response" to response))
+            }
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
