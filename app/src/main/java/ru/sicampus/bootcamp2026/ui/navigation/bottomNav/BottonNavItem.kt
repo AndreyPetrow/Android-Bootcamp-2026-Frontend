@@ -1,9 +1,9 @@
-package ru.sicampus.bootcamp2026.ui.navigation
+package ru.sicampus.bootcamp2026.ui.navigation.bottomNav
 
 import ru.sicampus.bootcamp2026.R
 
 data class BottomNavItem(
     val label: String,
     val icon: Int = R.drawable.profile,
-    val route:String,
+    val route: String,
 )

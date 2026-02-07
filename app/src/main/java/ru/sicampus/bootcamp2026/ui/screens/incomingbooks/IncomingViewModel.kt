@@ -32,23 +32,23 @@ class IncomingViewModel(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
 
-            val result = getInvitationsUseCase("pending")
-
-            result.fold(
-                onSuccess = { invitations ->
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        invitations = invitations
-                    )
-                },
-                onFailure = { error ->
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        error = error.message ?: "Ошибка загрузки приглашений",
-                        invitations = emptyList()
-                    )
-                }
-            )
+//            val result = getInvitationsUseCase("pending")
+//
+//            result.fold(
+//                onSuccess = { invitations ->
+//                    _state.value = _state.value.copy(
+//                        isLoading = false,
+//                        invitations = invitations
+//                    )
+//                },
+//                onFailure = { error ->
+//                    _state.value = _state.value.copy(
+//                        isLoading = false,
+//                        error = error.message ?: "Ошибка загрузки приглашений",
+//                        invitations = emptyList()
+//                    )
+//                }
+//            )
         }
     }
 
@@ -56,23 +56,23 @@ class IncomingViewModel(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
 
-            val result = respondToInvitationUseCase(meetingId, accept)
-
-            result.fold(
-                onSuccess = {
-                    // Удалить приглашение из списка после ответа
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        invitations = _state.value.invitations.filter { it.id != meetingId }
-                    )
-                },
-                onFailure = { error ->
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        error = error.message ?: "Ошибка отправки ответа"
-                    )
-                }
-            )
+//            val result = respondToInvitationUseCase(meetingId, accept)
+//
+//            result.fold(
+//                onSuccess = {
+//                    // Удалить приглашение из списка после ответа
+//                    _state.value = _state.value.copy(
+//                        isLoading = false,
+//                        invitations = _state.value.invitations.filter { it.id != meetingId }
+//                    )
+//                },
+//                onFailure = { error ->
+//                    _state.value = _state.value.copy(
+//                        isLoading = false,
+//                        error = error.message ?: "Ошибка отправки ответа"
+//                    )
+//                }
+//            )
         }
     }
 

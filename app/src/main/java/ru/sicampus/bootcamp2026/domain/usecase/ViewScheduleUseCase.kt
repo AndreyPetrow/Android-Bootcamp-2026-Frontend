@@ -7,15 +7,15 @@ import java.time.LocalDate
 class ViewScheduleUseCase(
     private val meetingRepository: MeetingRepository
 ) {
-    suspend fun getDaySchedule(day: LocalDate): Result<List<ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto>> {
-        return meetingRepository.getDaySchedule(day)
-    }
-
-    suspend fun getWeekSchedule(year: Int, week: Int): Result<List<ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto>> {
-        return meetingRepository.getWeekSchedule(year, week)
-    }
-
-    suspend fun getMonthSchedule(year: Int, month: Int): Result<List<ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto>> {
-        return meetingRepository.getMonthSchedule(year, month)
-    }
+//    suspend fun getDaySchedule(day: LocalDate): Result<List<ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto>> {
+//        return meetingRepository.getDaySchedule(day)
+//    }
+//
+//    suspend fun getWeekSchedule(year: Int, week: Int): Result<List<ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto>> {
+//        return meetingRepository.getWeekSchedule(year, week)
+//    }
+//
+//    suspend fun getMonthSchedule(year: Int, month: Int): Result<List<ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto>> {
+//        return meetingRepository.getMonthSchedule(year, month)
+//    }
 }

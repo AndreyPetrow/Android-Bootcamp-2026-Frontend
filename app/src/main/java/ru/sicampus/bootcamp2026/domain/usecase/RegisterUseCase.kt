@@ -1,6 +1,7 @@
 package ru.sicampus.bootcamp2026.domain.usecase
 
 import ru.sicampus.bootcamp2026.data.repository.AuthRepository
+import ru.sicampus.bootcamp2026.domain.entities.User
 
 class RegisterUseCase(
     private val authRepository: AuthRepository

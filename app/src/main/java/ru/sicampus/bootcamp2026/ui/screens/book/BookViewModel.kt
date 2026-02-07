@@ -95,25 +95,25 @@ class BookViewModel(
                 "participantIds" to _state.value.selectedParticipants.map { it.id }
             )
 
-            val result = createMeetingUseCase(meetingData)
-
-            result.fold(
-                onSuccess = {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        isSuccess = true,
-                        title = "",
-                        description = "",
-                        selectedParticipants = emptyList()
-                    )
-                },
-                onFailure = { error ->
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        error = error.message ?: "Ошибка создания встречи"
-                    )
-                }
-            )
+//            val result = createMeetingUseCase(meetingData)
+//
+//            result.fold(
+//                onSuccess = {
+//                    _state.value = _state.value.copy(
+//                        isLoading = false,
+//                        isSuccess = true,
+//                        title = "",
+//                        description = "",
+//                        selectedParticipants = emptyList()
+//                    )
+//                },
+//                onFailure = { error ->
+//                    _state.value = _state.value.copy(
+//                        isLoading = false,
+//                        error = error.message ?: "Ошибка создания встречи"
+//                    )
+//                }
+//            )
         }
     }
 

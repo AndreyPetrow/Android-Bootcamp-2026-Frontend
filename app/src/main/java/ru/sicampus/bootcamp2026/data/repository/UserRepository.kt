@@ -11,7 +11,8 @@ import io.ktor.http.contentType
 import ru.sicampus.bootcamp2026.data.dto.user.UserDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserMiniDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserUpdateDto
-import ru.sicampus.bootcamp2026.data.source.ApiClientImpl
+import ru.sicampus.bootcamp2026.data.source.ApiClient
+import java.time.LocalDateTime
 
 
 interface UserRepository {
@@ -21,15 +22,28 @@ interface UserRepository {
 }
 
 class UserRepositoryImpl(
-    private val client: HttpClient = ApiClientImpl().client
+    private val client: HttpClient = ApiClient.client
 ) : UserRepository {
 
     override suspend fun getUserById(id: Long): Result<UserDto> {
         return try {
             // TODO: Заменить на реальный endpoint
-            val response = client.get("http://10.0.2.2:8080/api/v1/user/$id")
-            val userDto = response.body<UserDto>()
-            Result.success(userDto)
+            // val response = client.get("http://10.0.2.2:8080/api/v1/user/$id")
+            //val userDto = response.body<UserDto>()
+            Result.success(UserDto(
+                id = 1,
+                firstName = "Андрей",
+                secondName = "Андреевич",
+                email = "peff@fff.com",
+                description = "ddddd",
+                position = "ddd",
+                department = "dsdsdsd",
+                photoUrl = "https://catalog-cdn.detmir.st/media/2fe02057f9915e72a378795d32c79ea9.jpeg",
+                role = "ROLE_USER",
+                createdAt = LocalDateTime.now().toString(),
+                updatedAt = LocalDateTime.now().toString()
+
+            ))
         } catch (e: Exception) {
             Result.failure(e)
         }

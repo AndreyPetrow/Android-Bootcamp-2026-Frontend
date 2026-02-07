@@ -8,9 +8,9 @@ class CreateMeetingUseCase(
     private val meetingRepository: MeetingRepository,
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(meetingData: Map<String, Any>): Result<Unit> {
-        return meetingRepository.createMeeting(meetingData).map { Unit }
-    }
+//    suspend operator fun invoke(meetingData: Map<String, Any>): Result<Unit> {
+//        return meetingRepository.createMeeting(meetingData).map { Unit }
+//    }
 
     // мне кажется опционально
     suspend fun searchUsers(query: String): Result<List<UserMiniDto>> {

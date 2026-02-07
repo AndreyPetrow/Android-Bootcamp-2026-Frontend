@@ -1,7 +1,6 @@
 package ru.sicampus.bootcamp2026.data.repository
 
 import ru.sicampus.bootcamp2026.data.source.dataSource.MeetingDataSource
-import ru.sicampus.bootcamp2026.domain.entities.InvitationStatus
 import ru.sicampus.bootcamp2026.domain.entities.MeetingMini
 import ru.sicampus.bootcamp2026.domain.mapper.MeetingMapper
 import java.time.LocalDate
@@ -49,7 +48,7 @@ class MeetingRepository(
 //        }
 //    }
 
-    suspend fun respondToInvitation(invitationId: Long, status: InvitationStatus): Result<Unit> {
-        return meetingDataSource.respondToInvitation(invitationId, status)
-    }
+//    suspend fun respondToInvitation(invitationId: Long, status: Boolean): Result<Unit> {
+//        return meetingDataSource.respondToInvitation(invitationId, status)
+//    }
 }

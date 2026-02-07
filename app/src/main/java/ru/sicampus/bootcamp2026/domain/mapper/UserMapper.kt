@@ -9,6 +9,7 @@ import ru.sicampus.bootcamp2026.domain.entities.User
 import ru.sicampus.bootcamp2026.domain.entities.UserMini
 import ru.sicampus.bootcamp2026.domain.entities.UserMiniInvitation
 import ru.sicampus.bootcamp2026.domain.entities.UserUpdate
+import java.time.LocalDateTime
 
 object UserMapper {
 
@@ -22,8 +23,8 @@ object UserMapper {
             department = dto.department,
             photoUrl = dto.photoUrl,
             role = dto.role,
-            createdAt = dto.createdAt,
-            updatedAt = dto.updatedAt,
+            createdAt = LocalDateTime.parse(dto.createdAt),
+            updatedAt = LocalDateTime.parse(dto.updatedAt),
             email = dto.email
         )
     }
@@ -45,6 +46,17 @@ object UserMapper {
             description = dto.description,
             position = dto.position,
             department = dto.department
+        )
+    }
+
+    fun toDomain(dto: UserMiniInvitationDto): UserMiniInvitation {
+        return UserMiniInvitation(
+            id = dto.id,
+            firstName = dto.firstName,
+            secondName = dto.secondName,
+            photoUrl = dto.photoUrl,
+            status = dto.status,
+            respondedAt = LocalDateTime.parse(dto.respondedAt),
         )
     }
 
@@ -70,8 +82,8 @@ object UserMapper {
             department = domain.department,
             photoUrl = domain.photoUrl,
             role = domain.role,
-            createdAt = domain.createdAt,
-            updatedAt = domain.updatedAt
+            createdAt = domain.createdAt.toString(),
+            updatedAt = domain.updatedAt.toString()
         )
     }
 }

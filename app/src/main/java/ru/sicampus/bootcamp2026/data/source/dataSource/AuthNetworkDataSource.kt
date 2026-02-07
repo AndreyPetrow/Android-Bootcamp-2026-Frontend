@@ -9,7 +9,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.sicampus.bootcamp2026.data.dto.auth.LoginRequest
 import ru.sicampus.bootcamp2026.data.dto.auth.RegisterRequest
 import ru.sicampus.bootcamp2026.data.dto.user.UserDto
 import ru.sicampus.bootcamp2026.data.source.ApiClient

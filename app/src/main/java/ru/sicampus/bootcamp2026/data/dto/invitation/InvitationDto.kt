@@ -8,13 +8,13 @@ import java.time.LocalTime
 @Serializable
 data class InvitationDto(
     @SerialName("id") val id: Long,
-    @SerialName("long") val authorId: Long,
-    @SerialName("id") val authorFirstName: String,
-    @SerialName("id") val authorSecondName: String,
-    @SerialName("id") val meetingId: Long,
-    @SerialName("id") val title: String,
-    @SerialName("id") val address: String,
-    @SerialName("id") val date: LocalDate,
-    @SerialName("id") val timeStart: LocalTime,
-    @SerialName("id") val timeEnd: LocalTime
+    @SerialName("authorId") val authorId: Long,
+    @SerialName("authorFirstName") val authorFirstName: String,
+    @SerialName("authorSecondName") val authorSecondName: String,
+    @SerialName("meetingId") val meetingId: Long,
+    @SerialName("title") val title: String,
+    @SerialName("address") val address: String,
+    @SerialName("date") val date: String,
+    @SerialName("timeStart") val timeStart: String,
+    @SerialName("timeEnd") val timeEnd: String
 )

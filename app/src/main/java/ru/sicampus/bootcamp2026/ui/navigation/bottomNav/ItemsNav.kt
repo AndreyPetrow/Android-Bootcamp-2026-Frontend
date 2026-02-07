@@ -1,4 +1,4 @@
-package ru.sicampus.bootcamp2026.ui.navigation
+package ru.sicampus.bootcamp2026.ui.navigation.bottomNav
 
 
 import ru.sicampus.bootcamp2026.R
@@ -8,21 +8,21 @@ object ItemsNav {
         BottomNavItem(
             label = "Расписание",
             icon = R.drawable.schedule,
-            route = "schedule"
+            route = "schedule",
         ),
         BottomNavItem(
             label = "Входящие",
             icon = R.drawable.mail,
-            route = "incoming"
+            route = "incoming",
         ),
         BottomNavItem(
             label = "Профиль",
             icon = R.drawable.profile,
-            route = "profile"
+            route = "profile",
         ),
         BottomNavItem(
             label = "book",
-            route = "booking"
+            route = "booking",
         )
     )
 

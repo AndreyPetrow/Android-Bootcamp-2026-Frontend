@@ -29,7 +29,7 @@ data class UserMiniInvitation(
     val secondName: String,
     val photoUrl: String,
     val status: String,
-    val respondedAt: String
+    val respondedAt: LocalDateTime
 )
 
 data class UserUpdate(

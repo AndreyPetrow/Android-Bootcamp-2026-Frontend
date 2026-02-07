@@ -17,11 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
+import ru.sicampus.bootcamp2026.ui.navigation.SearchScreenDestination
+import ru.sicampus.bootcamp2026.ui.navigation.bottomNav.ItemsNav
 import ru.sicampus.bootcamp2026.ui.screens.book.BookScreen
 import ru.sicampus.bootcamp2026.ui.screens.incomingbooks.IncomingScreen
 import ru.sicampus.bootcamp2026.ui.screens.profile.ProfileScreen
 import ru.sicampus.bootcamp2026.ui.screens.schedule.ScheduleScreen
+import ru.sicampus.bootcamp2026.ui.screens.search.SearchScreen
 
 @Composable
 fun AppNavHost(
@@ -42,11 +44,15 @@ fun AppNavHost(
         }
 
         composable(ItemsNav.BottomNavItems[2].route) {
-            ProfileScreen()
+            ProfileScreen(navController = navController)
         }
 
         composable(ItemsNav.BottomNavItems[3].route) {
             BookScreen(navController)
+        }
+
+        composable<SearchScreenDestination> {
+            SearchScreen(navController = navController)
         }
     }
 }

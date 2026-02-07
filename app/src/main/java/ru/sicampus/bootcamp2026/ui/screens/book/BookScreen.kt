@@ -66,7 +66,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
-import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
+import ru.sicampus.bootcamp2026.ui.navigation.bottomNav.ItemsNav
 import ru.sicampus.bootcamp2026.ui.theme.BackgroundColor
 import ru.sicampus.bootcamp2026.ui.theme.BlueMain
 import ru.sicampus.bootcamp2026.ui.theme.GrayTextColor

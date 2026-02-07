@@ -1,24 +1,82 @@
 package ru.sicampus.bootcamp2026.ui.screens.profile
 
-import android.os.Build
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.sicampus.bootcamp2026.data.dto.user.UserDto
-import ru.sicampus.bootcamp2026.data.dto.user.UserUpdateDto
-import ru.sicampus.bootcamp2026.domain.usecase.UpdateProfileUseCase
-import java.time.LocalDateTime
+import ru.sicampus.bootcamp2026.App
+import ru.sicampus.bootcamp2026.data.repository.UserRepositoryImpl
+import ru.sicampus.bootcamp2026.domain.usecase.GetUserUseCase
+import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 
-class ProfileViewModel(
-    private val updateProfileUseCase: UpdateProfileUseCase
-) : ViewModel() {
+class ProfileViewModel() : ViewModel() {
+    val settingsUtils = SettingsUtils(App.context)
 
-//    private val _state = MutableStateFlow(ProfileState())
-//    val state: StateFlow<ProfileState> = _state.asStateFlow()
+    private val userId by lazy { settingsUtils.getUserId() }
+
+    private val _uiState = MutableStateFlow<ProfileState>(ProfileState.Loading)
+    val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
+
+    private val _navigationEvents: Channel<ActionState> = Channel()
+    val navigationEvents: Flow<ActionState> = _navigationEvents.receiveAsFlow()
+
+    val getUserUseCase by lazy { GetUserUseCase(UserRepositoryImpl()) }
+
+    val errorText = mutableStateOf("")
+
+    init { update() }
+
+    fun onIntent(intent: ProfileIntent) {
+        when (intent) {
+            ProfileIntent.Request -> {
+                viewModelScope.launch {
+                    _uiState.update { ProfileState.Loading }
+
+                    getUserUseCase.invoke(userId).fold(
+                        onSuccess = { user ->
+                            errorText.value = ""
+                            _uiState.value = ProfileState.Data(
+                                fullName = user.firstName + user.secondName,
+                                email = user.email,
+                                description = user.description,
+                                position = user.position,
+                                department = user.department,
+                                photoUrl = user.photoUrl,
+                                createdAt = user.createdAt,
+                            )
+                        },
+                        onFailure = { error ->
+                            _uiState.value = ProfileState.Error(error.message.toString())
+                        }
+                    )
+                }
+            }
+
+            ProfileIntent.Logout -> TODO()
+            ProfileIntent.Update -> TODO()
+        }
+    }
+
+    fun update() {
+        onIntent(ProfileIntent.Request)
+    }
+
+    fun navigate(actionState: ActionState) {
+        viewModelScope.launch {
+            _navigationEvents.send(actionState)
+        }
+    }
+
 //
 //    init {
 //        loadUserData()

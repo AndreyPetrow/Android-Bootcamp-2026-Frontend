@@ -1,13 +1,12 @@
-package ru.sicampus.bootcamp2026.data.source
+package ru.sicampus.bootcamp2026.core
 
 //наверное лучше по другому, но так вроде хорошо
 object Config {
-    const val BASE_URL = "http://10.0.2.2:8080/api/v1"
+    const val BASE_URL = "http://192.168.1.14:8080/api/v1"
 
     // Auth endp-s
     const val LOGIN_ENDPOINT = "/auth/login"
     const val REGISTER_ENDPOINT = "/auth/register"
-    const val REFRESH_TOKEN_ENDPOINT = "/auth/refresh"
 
     // User endp-s
     const val USER_BY_ID_ENDPOINT = "/users/{id}"
@@ -22,14 +21,4 @@ object Config {
     const val GET_MONTH_SCHEDULE_ENDPOINT = "/meetings/schedule/month"
     const val GET_INVITATIONS_ENDPOINT = "/meetings/invitations"
     const val RESPOND_TO_INVITATION_ENDPOINT = "/meetings/{id}/respond"
-
-    // Headers
-    const val AUTHORIZATION_HEADER = "Authorization"
-    const val BEARER_PREFIX = "Bearer "
-    const val CONTENT_TYPE_HEADER = "Content-Type"
-    const val CONTENT_TYPE_JSON = "application/json"
-
-    // Status codes
-    const val HTTP_UNAUTHORIZED = 401
-    const val HTTP_FORBIDDEN = 403
 }

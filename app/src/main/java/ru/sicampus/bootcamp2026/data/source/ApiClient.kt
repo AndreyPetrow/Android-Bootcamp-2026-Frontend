@@ -11,7 +11,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import ru.sicampus.bootcamp2026.data.source.Config.BASE_URL
+import ru.sicampus.bootcamp2026.core.Config.BASE_URL
 
 object ApiClient {
 
