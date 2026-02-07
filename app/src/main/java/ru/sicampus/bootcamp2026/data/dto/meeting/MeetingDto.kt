@@ -1,20 +1,21 @@
 package ru.sicampus.bootcamp2026.data.dto.meeting
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.sicampus.bootcamp2026.data.dto.user.UserMiniDto
-import ru.sicampus.bootcamp2026.data.dto.user.UserMiniInvitationDto
+import ru.sicampus.bootcamp2026.data.dto.invitation.UserMiniInvitationDto
 import java.time.LocalDateTime
 
 @Serializable
 data class MeetingDto(
-    val id: Long,
-    val title: String,
-    val address: String,
-    val description: String? = null,
-    val date: String,
-    val timeStart: LocalDateTime,
-    val timeEnd: LocalDateTime,
-    val organizer: UserMiniDto,
-    val users: List<UserMiniInvitationDto> = emptyList(),
-    val createAt: LocalDateTime
+    @SerialName("id") val id: Long,
+    @SerialName("title") val title: String,
+    @SerialName("address") val address: String,
+    @SerialName("description") val description: String? = null,
+    @SerialName("date") val date: String,
+    @SerialName("timeStart") val timeStart: LocalDateTime,
+    @SerialName("timeEnd") val timeEnd: LocalDateTime,
+    @SerialName("organizer") val organizer: UserMiniDto,
+    @SerialName("users") val users: List<UserMiniInvitationDto> = emptyList(),
+    @SerialName("createAt") val createAt: LocalDateTime
 )

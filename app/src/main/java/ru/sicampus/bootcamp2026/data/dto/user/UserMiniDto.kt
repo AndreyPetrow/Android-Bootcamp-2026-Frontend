@@ -1,11 +1,12 @@
 package ru.sicampus.bootcamp2026.data.dto.user
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserMiniDto(
-    val id: Long,
-    val firstName: String,
-    val secondName: String,
-    val photoUrl: String
+    @SerialName("id") val id: Long,
+    @SerialName("firstName") val firstName: String,
+    @SerialName("secondName") val secondName: String,
+    @SerialName("photoUrl") val photoUrl: String
 )

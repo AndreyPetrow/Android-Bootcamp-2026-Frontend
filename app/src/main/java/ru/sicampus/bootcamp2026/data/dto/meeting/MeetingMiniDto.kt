@@ -1,5 +1,6 @@
 package ru.sicampus.bootcamp2026.data.dto.meeting
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.sicampus.bootcamp2026.data.dto.user.UserMiniDto
 import java.time.LocalDate
@@ -7,12 +8,12 @@ import java.time.LocalDateTime
 
 @Serializable
 data class MeetingMiniDto(
-    val id: Long,
-    val title: String,
-    val description: String? = null,
-    val address: String,
-    val date: LocalDate,
-    val timeStart: LocalDateTime,
-    val timeEnd: LocalDateTime,
-    val organizer: UserMiniDto
+    @SerialName("id") val id: Long,
+    @SerialName("title") val title: String,
+    @SerialName("description") val description: String? = null,
+    @SerialName("address") val address: String,
+    @SerialName("date") val date: LocalDate,
+    @SerialName("timeStart") val timeStart: LocalDateTime,
+    @SerialName("timeEnd") val timeEnd: LocalDateTime,
+    @SerialName("organizer") val organizer: UserMiniDto
 )

@@ -1,18 +1,19 @@
 package ru.sicampus.bootcamp2026.data.dto.user
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
 data class UserDto(
-    val id: Long,
-    val firstName: String,
-    val secondName: String,
-    val description: String? = null,
-    val position: String? = null,
-    val department: String? = null,
-    val photoUrl: String,
-    val role: String,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    @SerialName("id") val id: Long,
+    @SerialName("firstName") val firstName: String,
+    @SerialName("secondName") val secondName: String,
+    @SerialName("description") val description: String? = null,
+    @SerialName("position") val position: String? = null,
+    @SerialName("department") val department: String? = null,
+    @SerialName("photoUrl") val photoUrl: String,
+    @SerialName("role") val role: String,
+    @SerialName("createdAt") val createdAt: LocalDateTime,
+    @SerialName("updatedAt") val updatedAt: LocalDateTime
 )
