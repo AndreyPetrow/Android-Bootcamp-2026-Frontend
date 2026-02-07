@@ -3,7 +3,7 @@ package ru.sicampus.bootcamp2026.domain.mapper
 
 import ru.sicampus.bootcamp2026.data.dto.user.UserDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserMiniDto
-import ru.sicampus.bootcamp2026.data.dto.user.UserMiniInvitationDto
+import ru.sicampus.bootcamp2026.data.dto.invitation.UserMiniInvitationDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserUpdateDto
 import ru.sicampus.bootcamp2026.domain.entities.User
 import ru.sicampus.bootcamp2026.domain.entities.UserMini
@@ -23,7 +23,8 @@ object UserMapper {
             photoUrl = dto.photoUrl,
             role = dto.role,
             createdAt = dto.createdAt,
-            updatedAt = dto.updatedAt
+            updatedAt = dto.updatedAt,
+            email = dto.email
         )
     }
 
@@ -33,17 +34,6 @@ object UserMapper {
             firstName = dto.firstName,
             secondName = dto.secondName,
             photoUrl = dto.photoUrl
-        )
-    }
-
-    fun toDomain(dto: UserMiniInvitationDto): UserMiniInvitation {
-        return UserMiniInvitation(
-            id = dto.id,
-            firstName = dto.firstName,
-            secondName = dto.secondName,
-            photoUrl = dto.photoUrl,
-            status = dto.status,
-            respondedAt = dto.respondedAt
         )
     }
 
@@ -74,10 +64,11 @@ object UserMapper {
             id = domain.id,
             firstName = domain.firstName,
             secondName = domain.secondName,
+            email = domain.email,
             description = domain.description,
             position = domain.position,
             department = domain.department,
-            photoUrl = domain.photoUrl ?: "",
+            photoUrl = domain.photoUrl,
             role = domain.role,
             createdAt = domain.createdAt,
             updatedAt = domain.updatedAt

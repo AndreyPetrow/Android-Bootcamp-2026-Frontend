@@ -9,6 +9,7 @@ data class UserDto(
     @SerialName("id") val id: Long,
     @SerialName("firstName") val firstName: String,
     @SerialName("secondName") val secondName: String,
+    @SerialName("email") val email: String,
     @SerialName("description") val description: String? = null,
     @SerialName("position") val position: String? = null,
     @SerialName("department") val department: String? = null,
