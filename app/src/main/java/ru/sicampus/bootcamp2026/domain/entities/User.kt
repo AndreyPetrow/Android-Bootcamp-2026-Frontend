@@ -12,8 +12,8 @@ data class User(
     val department: String? = null,
     val photoUrl: String,
     val role: String,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val createdAt: String,
+    val updatedAt: String
 )
 
 data class UserMini(

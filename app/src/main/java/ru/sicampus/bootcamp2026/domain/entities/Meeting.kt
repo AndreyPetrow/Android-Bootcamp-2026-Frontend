@@ -9,11 +9,11 @@ data class Meeting(
     val address: String,
     val description: String? = null,
     val date: String,
-    val timeStart: LocalDateTime,
-    val timeEnd: LocalDateTime,
+    val timeStart: String,
+    val timeEnd: String,
     val organizer: UserMini,
-    val participants: List<UserMiniInvitation> = emptyList(),
-    val createdAt: LocalDateTime
+    val users: List<UserMiniInvitation> = emptyList(),
+    val createdAt: String
 )
 
 data class MeetingMini(
@@ -21,9 +21,9 @@ data class MeetingMini(
     val title: String,
     val description: String? = null,
     val address: String,
-    val date: LocalDate,
-    val timeStart: LocalDateTime,
-    val timeEnd: LocalDateTime,
+    val date: String,
+    val timeStart: String,
+    val timeEnd: String,
     val organizer: UserMini
 )
 
@@ -32,8 +32,7 @@ data class MeetingCreate(
     val description: String? = null,
     val address: String,
     val date: String,
-    val timeStart: LocalDateTime,
-    val timeEnd: LocalDateTime,
-    val organizerId: Long,
-    val participantIds: List<Long> = emptyList()
+    val timeStart: String,
+    val timeEnd: String,
+    val userId: List<Long> = emptyList()
 )

@@ -15,6 +15,6 @@ data class UserDto(
     @SerialName("department") val department: String? = null,
     @SerialName("photoUrl") val photoUrl: String,
     @SerialName("role") val role: String,
-    @SerialName("createdAt") val createdAt: LocalDateTime,
-    @SerialName("updatedAt") val updatedAt: LocalDateTime
+    @SerialName("createdAt") val createdAt: String,
+    @SerialName("updatedAt") val updatedAt: String
 )

@@ -13,9 +13,9 @@ data class MeetingDto(
     @SerialName("address") val address: String,
     @SerialName("description") val description: String? = null,
     @SerialName("date") val date: String,
-    @SerialName("timeStart") val timeStart: LocalDateTime,
-    @SerialName("timeEnd") val timeEnd: LocalDateTime,
+    @SerialName("timeStart") val timeStart: String,
+    @SerialName("timeEnd") val timeEnd: String,
     @SerialName("organizer") val organizer: UserMiniDto,
     @SerialName("users") val users: List<UserMiniInvitationDto> = emptyList(),
-    @SerialName("createAt") val createAt: LocalDateTime
+    @SerialName("createAt") val createAt: String
 )
