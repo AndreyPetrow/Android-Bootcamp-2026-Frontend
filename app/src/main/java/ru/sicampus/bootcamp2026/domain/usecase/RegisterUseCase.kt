@@ -11,6 +11,6 @@ class RegisterUseCase(
         firstName: String,
         secondName: String
     ): Result<Unit> {
-        return authRepository.register(email, password, firstName, secondName)
+        return authRepository.register(email, password, firstName, secondName).map { Unit }
     }
 }

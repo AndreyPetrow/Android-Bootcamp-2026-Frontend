@@ -6,9 +6,9 @@ class AuthorizeUseCase(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        login: String,
+        email: String,
         password: String
     ): Result<Boolean> {
-        return authRepository.checkAndAuth(login, password)
+        return authRepository.checkAndAuth(email, password)
     }
 }

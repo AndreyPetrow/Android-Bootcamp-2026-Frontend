@@ -9,8 +9,8 @@ class AuthLocalDataSource {
     private var _cacheToken: String? = null
 
     @OptIn(ExperimentalEncodingApi::class)
-    fun setToken(login: String, password: String){
-        val decodePhrase = "$login:$password"
+    fun setToken(email: String, password: String){
+        val decodePhrase = "$email:$password"
         _cacheToken = "Basic ${Base64.encode(decodePhrase.toByteArray())}"
     }
 

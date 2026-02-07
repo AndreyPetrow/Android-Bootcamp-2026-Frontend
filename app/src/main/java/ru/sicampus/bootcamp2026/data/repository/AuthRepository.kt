@@ -14,10 +14,10 @@ class AuthRepository(
 ) {
 
     suspend fun checkAndAuth(
-        login: String,
+        email: String,
         password: String
     ): Result<Boolean>{
-        authLocalDataSource.setToken(login, password)
+        authLocalDataSource.setToken(email, password)
         return authNetworkDataSource.checkAuth(
             authLocalDataSource.token ?: return Result.success(false)
         )

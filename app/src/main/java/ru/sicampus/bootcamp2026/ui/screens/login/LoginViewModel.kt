@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.sicampus.bootcamp2026.domain.usecase.LoginUseCase
+import ru.sicampus.bootcamp2026.domain.usecase.AuthorizeUseCase
 
 data class LoginUiState(
     val email: String = "",
@@ -18,7 +18,7 @@ data class LoginUiState(
     val isLoginSuccess: Boolean = false
 )
 
-class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
+class LoginViewModel(private val authUseCase: AuthorizeUseCase) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
@@ -39,7 +39,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
         viewModelScope.launch {
-            val result = loginUseCase(
+            val result = authUseCase(
                 email = _uiState.value.email,
                 password = _uiState.value.password
             )
