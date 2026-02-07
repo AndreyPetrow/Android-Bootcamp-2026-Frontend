@@ -1,5 +1,6 @@
 package ru.sicampus.bootcamp2026.data.repository
 
+
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -10,7 +11,8 @@ import io.ktor.http.contentType
 import ru.sicampus.bootcamp2026.data.dto.user.UserDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserMiniDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserUpdateDto
-import ru.sicampus.bootcamp2026.data.source.ApiClient
+import ru.sicampus.bootcamp2026.data.source.ApiClientImpl
+
 
 interface UserRepository {
     suspend fun getUserById(id: Long): Result<UserDto>
@@ -19,7 +21,7 @@ interface UserRepository {
 }
 
 class UserRepositoryImpl(
-    private val client: HttpClient = ApiClient.client
+    private val client: HttpClient = ApiClientImpl().client
 ) : UserRepository {
 
     override suspend fun getUserById(id: Long): Result<UserDto> {

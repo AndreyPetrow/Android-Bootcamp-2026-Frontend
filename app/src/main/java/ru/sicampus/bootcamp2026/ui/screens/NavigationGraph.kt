@@ -1,18 +1,11 @@
-package ru.sicampus.bootcamp2026
+package ru.sicampus.bootcamp2026.ui.screens
 
-import android.os.Build
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,67 +17,47 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
 import ru.sicampus.bootcamp2026.ui.screens.book.BookScreen
 import ru.sicampus.bootcamp2026.ui.screens.incomingbooks.IncomingScreen
-import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
 import ru.sicampus.bootcamp2026.ui.screens.profile.ProfileScreen
 import ru.sicampus.bootcamp2026.ui.screens.schedule.ScheduleScreen
 
-class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            val navController = rememberNavController()
-            Scaffold(
-                bottomBar = {
-                        BottomNavigationBar(navController)
-                }
-            ){
-                NavHostContainer(navController, it)
-            }
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NavHostContainer(
-    navController: NavHostController,
-    padding: PaddingValues
+fun AppNavHost(
+    navController: NavHostController = rememberNavController(),
+    padding: PaddingValues,
 ) {
-
     NavHost(
         navController = navController,
         startDestination = ItemsNav.BottomNavItems[0].route,
         modifier = Modifier.padding(paddingValues = padding),
+    ) {
+        composable(ItemsNav.BottomNavItems[0].route) {
+            ScheduleScreen(navHostController = navController)
+        }
 
-        builder = {
-            composable(ItemsNav.BottomNavItems[0].route) {
-                ScheduleScreen(navHostController = navController)
-            }
+        composable(ItemsNav.BottomNavItems[1].route) {
+            IncomingScreen()
+        }
 
-            composable(ItemsNav.BottomNavItems[1].route) {
-                IncomingScreen()
-            }
+        composable(ItemsNav.BottomNavItems[2].route) {
+            ProfileScreen()
+        }
 
-            composable(ItemsNav.BottomNavItems[2].route) {
-                ProfileScreen()
-            }
-            composable(ItemsNav.BottomNavItems[3].route) {
-                BookScreen(navController)
-            }
-        })
+        composable(ItemsNav.BottomNavItems[3].route) {
+            BookScreen(navController)
+        }
+    }
 }
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
 
-    NavigationBar(
-        containerColor = Color.White) {
+    NavigationBar(containerColor = Color.White) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
+
         ItemsNav.BottomNavItems.subList(fromIndex = 0 ,toIndex = 3).forEach { navItem ->
             NavigationBarItem(
                 selected = currentRoute == navItem.route,
@@ -109,4 +82,5 @@ fun BottomNavigationBar(navController: NavHostController) {
             )
         }
     }
+
 }
