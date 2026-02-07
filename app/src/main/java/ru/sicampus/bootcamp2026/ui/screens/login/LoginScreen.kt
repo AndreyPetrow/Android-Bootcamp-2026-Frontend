@@ -30,11 +30,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -51,18 +53,78 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.root.RootActivity
 import ru.sicampus.bootcamp2026.ui.screens.navlogin.LoginItemsNav
+import ru.sicampus.bootcamp2026.ui.screens.signup.CustomEmailTextField1
+import ru.sicampus.bootcamp2026.ui.screens.signup.CustomPasswordTextField
+import ru.sicampus.bootcamp2026.ui.theme.BlueMain
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
+import android.util.Patterns
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier,
-                context: Context, navHostController: NavHostController) {
-    var emailText by remember { mutableStateOf("") }
-    var passText by remember { mutableStateOf("") }
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    context: Context,
+    navHostController: NavHostController,
+    viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory.create(context))
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    val emailValidationState = remember(uiState.email) {
+        derivedStateOf {
+            when {
+                uiState.email.isBlank() -> ValidationState.Empty
+                uiState.email.length > 255 -> ValidationState.Error("Слишком длинный email")
+                !Patterns.EMAIL_ADDRESS.matcher(uiState.email).matches() ->
+                    ValidationState.Error("Неверный формат email")
+                else -> ValidationState.Valid
+            }
+        }
+    }
+
+    val passwordValidationState = remember(uiState.password) {
+        derivedStateOf {
+            when {
+                uiState.password.isBlank() -> ValidationState.Empty
+                uiState.password.length < 8 -> ValidationState.Error("Пароль должен быть не менее 8 символов")
+                uiState.password.length > 64 -> ValidationState.Error("Пароль должен быть не более 64 символов")
+                else -> ValidationState.Valid
+            }
+        }
+    }
+
+    val isFormValid by remember {
+        derivedStateOf {
+            emailValidationState.value is ValidationState.Valid &&
+                    passwordValidationState.value is ValidationState.Valid
+        }
+    }
+
+    LaunchedEffect(uiState.isLoginSuccess) {
+        if (uiState.isLoginSuccess) {
+            // Сохраняем данные
+            SettingsUtils(context).setProfileData(
+                1L, uiState.email, uiState.password
+            )
+
+            context.startActivity(
+                Intent(context, RootActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            )
+            viewModel.resetLoginState()
+        }
+    }
+
     Box(Modifier.fillMaxSize()) {
         Card(
             modifier = Modifier
@@ -75,46 +137,129 @@ fun LoginScreen(modifier: Modifier = Modifier,
                 .align(Alignment.Center),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            Column(Modifier.align(Alignment.CenterHorizontally), horizontalAlignment =
-                Alignment.CenterHorizontally) {
+            Column(
+                Modifier.align(Alignment.CenterHorizontally),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Spacer(Modifier.size(25.dp))
-                Icon(painterResource(R.drawable.app_icon), "", modifier = Modifier.size(90.dp),
-                    tint = Color(0xff155DFC))
-                Text(stringResource(R.string.app_name_label), fontSize = 45.sp, fontWeight = FontWeight.ExtraBold)
-                Text(stringResource(R.string.app_name_desk), fontSize = 20.sp, fontWeight = FontWeight.Normal, modifier = Modifier.alpha(0.7f))
+                Icon(
+                    painterResource(R.drawable.app_icon),
+                    "",
+                    modifier = Modifier.size(90.dp),
+                    tint = Color(0xff155DFC)
+                )
+                Text(
+                    stringResource(R.string.app_name_label),
+                    fontSize = 45.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Text(
+                    stringResource(R.string.app_name_desk),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.alpha(0.7f)
+                )
                 Spacer(Modifier.size(45.dp))
-                CustomTextField1(value = emailText, onValueChange = {emailText = it}, placeholder = stringResource(R.string.email))
+
+                CustomEmailTextField1(
+                    value = uiState.email,
+                    onValueChange = viewModel::onEmailChange,
+                    placeholder = stringResource(R.string.email),
+                    validatorHasErrors = emailValidationState.value is ValidationState.Error,
+                    errorMessage = if (emailValidationState.value is ValidationState.Error) {
+                        (emailValidationState.value as ValidationState.Error).message
+                    } else null
+                )
                 Spacer(Modifier.size(20.dp))
-                CustomTextField1(value = passText, onValueChange = {passText = it}, placeholder = stringResource(R.string.password))
+                CustomPasswordTextField(
+                    value = uiState.password,
+                    onValueChange = viewModel::onPasswordChange,
+                    placeholder = stringResource(R.string.password),
+                    validatorPasswordHasErrors = passwordValidationState.value is ValidationState.Error,
+                    errorMessage = if (passwordValidationState.value is ValidationState.Error) {
+                        (passwordValidationState.value as ValidationState.Error).message
+                    } else null
+                )
                 Spacer(Modifier.size(20.dp))
-                Button(onClick = {
-                    context.startActivity(
-                        Intent(App.context, RootActivity::class.java))
-                    SettingsUtils(App.context).setProfileData(
-                        1L, emailText, passText
+                uiState.errorMessage?.let { error ->
+                    Text(
+                        text = error,
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .fillMaxWidth(0.9f)
                     )
-                }, modifier = Modifier.height(53.dp).fillMaxWidth(0.9f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC))) {
-                    Text(stringResource(R.string.login), fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
                 }
+                Button(
+                    onClick = {
+                        if (isFormValid) {
+                            viewModel.login()
+                        } else {
+                            if (emailValidationState.value is ValidationState.Error) {
+                                viewModel.onEmailChange(uiState.email)
+                            }
+                            if (passwordValidationState.value is ValidationState.Error) {
+                                viewModel.onPasswordChange(uiState.password)
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .height(53.dp)
+                        .fillMaxWidth(0.9f),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC)),
+                    enabled = isFormValid && !uiState.isLoading
+                ) {
+                    if (uiState.isLoading) {
+                        Box(
+                            modifier = Modifier.size(24.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        Text(
+                            stringResource(R.string.login),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+
                 Spacer(Modifier.size(10.dp))
-                Text("Зарегистрироваться", Modifier.clickable(onClick ={
-                    navHostController.navigate(LoginItemsNav.NavItems[1].route)
-                }
-                ))
+                Text(
+                    text = "Зарегистрироваться",
+                    modifier = Modifier.clickable(
+                        onClick = {
+                            navHostController.navigate(LoginItemsNav.NavItems[1].route)
+                        }
+                    ),
+                    color = BlueMain,
+                    fontSize = 16.sp
+                )
+
                 Spacer(Modifier.size(25.dp))
             }
         }
     }
 }
+
+sealed class ValidationState {
+    object Empty : ValidationState()
+    object Valid : ValidationState()
+    data class Error(val message: String) : ValidationState()
+}
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CustomTextField1(
+fun CustomEmailTextField1(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    keyboardType: KeyboardType = KeyboardType.Text
+    validatorHasErrors: Boolean = false,
+    errorMessage: String? = null,
+    keyboardType: KeyboardType = KeyboardType.Email
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
@@ -123,73 +268,220 @@ fun CustomTextField1(
         animationSpec = tween(durationMillis = 200)
     )
 
-    Surface(
-        modifier = modifier
-            .shadow(
-                elevation = elevation,
-                shape = RoundedCornerShape(20.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = if (isFocused) Color(0xff155DFC).copy(alpha = 0.6f)
-                else Color.LightGray.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(20.dp)
-            )
-            .clip(RoundedCornerShape(20.dp))
-            .background(
-                color = if (enabled) Color.White else Color.LightGray
-            )
-            .clickable(
-                enabled = enabled,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) { focusRequester.requestFocus() },
-        color = Color.Transparent
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+    Column{
+        Surface(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .padding(horizontal = 16.dp, vertical = 4.dp)
+                .shadow(
+                    elevation = elevation,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = when {
+                        validatorHasErrors -> Color.Red.copy(alpha = 0.6f)
+                        isFocused -> Color(0xff155DFC).copy(alpha = 0.6f)
+                        else -> Color.LightGray.copy(alpha = 0.3f)
+                    },
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .clip(RoundedCornerShape(20.dp))
+                .background(
+                    color = if (enabled) Color.White else Color.LightGray
+                )
+                .clickable(
+                    enabled = enabled,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { focusRequester.requestFocus() },
+            color = Color.Transparent
         ) {
-            Spacer(modifier = Modifier.width(12.dp))
-
-            BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { focusState ->
-                        isFocused = focusState.isFocused
-                    }
-                    .height(46.dp)
-                    .fillMaxWidth(0.9f),
-                enabled = enabled,
-                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-                textStyle = TextStyle(
-                    color = if (enabled) Color.Black else Color.Gray,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal
-                ),
-                decorationBox = { innerTextField ->
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        if (value.isEmpty()) {
-                            Text(
-                                text = placeholder,
-                                color = Color.Gray.copy(alpha = 0.6f),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal
-                            )
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
+            ) {
+                Spacer(modifier = Modifier.width(12.dp))
+
+                BasicTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState ->
+                            isFocused = focusState.isFocused
+                        },
+                    enabled = enabled,
+                    keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+                    textStyle = TextStyle(
+                        color = if (enabled) Color.Black else Color.Gray,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal
+                    ),
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = placeholder,
+                                    color = Color.Gray.copy(alpha = 0.6f),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
                     }
-                }
+                )
+            }
+        }
+
+        if (validatorHasErrors && errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 4.dp)
             )
         }
     }
 }
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CustomPasswordTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    validatorPasswordHasErrors: Boolean = false,
+    errorMessage: String? = null,
+    keyboardType: KeyboardType = KeyboardType.Password,
+    isPassword: Boolean = true
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    val elevation by animateDpAsState(
+        targetValue = if (isFocused) 8.dp else 2.dp,
+        animationSpec = tween(durationMillis = 200)
+    )
 
+    val visualTransformation = if (isPassword) {
+        if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+    } else {
+        VisualTransformation.None
+    }
+
+    Column{
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .align(Alignment.CenterHorizontally)
+                .shadow(
+                    elevation = elevation,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = when {
+                        validatorPasswordHasErrors -> Color.Red.copy(alpha = 0.6f)
+                        isFocused -> Color(0xff155DFC).copy(alpha = 0.6f)
+                        else -> Color.LightGray.copy(alpha = 0.3f)
+                    },
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .clip(RoundedCornerShape(20.dp))
+                .background(
+                    color = if (enabled) Color.White else Color.LightGray
+                )
+                .clickable(
+                    enabled = enabled,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { focusRequester.requestFocus() },
+            color = Color.Transparent
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
+            ) {
+                Spacer(modifier = Modifier.width(12.dp))
+
+                BasicTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState ->
+                            isFocused = focusState.isFocused
+                        },
+                    enabled = enabled,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = if (isPassword) KeyboardType.Password else keyboardType
+                    ),
+                    textStyle = TextStyle(
+                        color = if (enabled) Color.Black else Color.Gray,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal
+                    ),
+                    visualTransformation = visualTransformation,
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = placeholder,
+                                    color = Color.Gray.copy(alpha = 0.6f),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            }
+                            innerTextField()
+                        }
+                    }
+                )
+                if (isPassword && value.isNotEmpty()) {
+                    val image = if (passwordVisible)
+                        R.drawable.visibility_icon
+                    else R.drawable.visibility_off_icon
+                    IconButton(
+                        onClick = { passwordVisible = !passwordVisible },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            painterResource(image),
+                            contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                            tint = Color.Black.copy(alpha = 0.6f),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.width(40.dp))
+                }
+            }
+        }
+
+        if (validatorPasswordHasErrors && errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 4.dp)
+            )
+        }
+    }
+}

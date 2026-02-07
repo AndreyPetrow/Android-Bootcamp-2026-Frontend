@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.screens.navlogin.LoginItemsNav
+import ru.sicampus.bootcamp2026.ui.theme.BlueMain
 
 
 @Composable
@@ -80,6 +81,15 @@ fun SignUpScreen(modifier: Modifier = Modifier,
             val passwordHasErrors by remember {
                 derivedStateOf {
                     if((passText.length !in 8..65) && passText.isNotEmpty() || (passText.isBlank() && passText.isNotEmpty())){
+                        true
+                    }else{
+                        false
+                    }
+                }
+            }
+            val password2HasErrors by remember {
+                derivedStateOf {
+                    if(pass2Text != passText){
                         true
                     }else{
                         false
@@ -117,7 +127,8 @@ fun SignUpScreen(modifier: Modifier = Modifier,
                                 validatorPasswordHasErrors = passwordHasErrors)
                             Spacer(Modifier.size(20.dp))
                             CustomPasswordTextField(value = pass2Text, onValueChange = {pass2Text = it}, placeholder = stringResource(R.string.repeat_password),
-                                validatorPasswordHasErrors = passwordHasErrors)
+                                validatorPasswordHasErrors = password2HasErrors,
+                                secondPass = true)
                             Spacer(Modifier.size(20.dp))
                             Button(onClick = {}, modifier = Modifier
                                 .height(53.dp)
@@ -127,7 +138,7 @@ fun SignUpScreen(modifier: Modifier = Modifier,
                             Spacer(Modifier.size(10.dp))
                             Text("Войти", Modifier.clickable(onClick = {
                                 navHostController.navigate(LoginItemsNav.NavItems[0].route)
-                            }))
+                            }), color = BlueMain)
                             Spacer(Modifier.size(25.dp))
                         }
                     }
@@ -332,7 +343,8 @@ fun CustomPasswordTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,validatorPasswordHasErrors: Boolean,
     keyboardType: KeyboardType = KeyboardType.Text,
-    isPassword: Boolean = true
+    isPassword: Boolean = true,
+    secondPass: Boolean = false
 ) {
     var isFocused by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -435,8 +447,10 @@ fun CustomPasswordTextField(
     }
     if (validatorPasswordHasErrors) {
         Text(
-            text = if (value.isBlank()) "Поле пустое"
-                else "Длина пароля должна быть от 8 до 64",
+            text =
+                if (!secondPass){ if(value.isBlank()) "Поле пустое"
+                else "Длина пароля должна быть от 8 до 64"}
+            else "Пароли не совпадают" ,
             color = Color.Red,
             fontSize = 14.sp,
             modifier = Modifier
