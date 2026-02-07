@@ -1,18 +1,32 @@
 package ru.sicampus.bootcamp2026.data.repository
 
-import ru.sicampus.bootcamp2026.data.source.dataSource.AuthDataSource
-import ru.sicampus.bootcamp2026.data.source.DataStoreManager
+import androidx.compose.runtime.snapshots.SnapshotApplyResult
+import ru.sicampus.bootcamp2026.data.source.dataSource.AuthNetworkDataSource
+import ru.sicampus.bootcamp2026.data.source.dataSource.AuthLocalDataSource
 import ru.sicampus.bootcamp2026.domain.entities.User
 import ru.sicampus.bootcamp2026.domain.mapper.UserMapper
+import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 class AuthRepository(
-    private val authDataSource: AuthDataSource
+    private val authNetworkDataSource: AuthNetworkDataSource,
+    private val authLocalDataSource: AuthLocalDataSource,
+    private val settingsUtils: SettingsUtils
 ) {
-    suspend fun login(email: String, password: String): Result<User> {
-        return authDataSource.login(email, password).map { userDto ->
-            DataStoreManager.saveCredentials(email, password)
-            UserMapper.toDomain(userDto)
-        }
+
+    suspend fun checkAndAuth(
+        login: String,
+        password: String
+    ): Result<Boolean>{
+        authLocalDataSource.setToken(login, password)
+        return authNetworkDataSource.checkAuth(
+            authLocalDataSource.token ?: return Result.success(false)
+        )
+            .onSuccess { isLogin ->
+                if (!isLogin) authLocalDataSource.clearToken()
+            }
+            .onFailure {
+                authLocalDataSource.clearToken()
+            }
     }
 
     suspend fun register(
@@ -21,24 +35,13 @@ class AuthRepository(
         firstName: String,
         secondName: String
     ): Result<User> {
-        return authDataSource.register(email, password, firstName, secondName).map { userDto ->
-            DataStoreManager.saveCredentials(email, password)
+        return authNetworkDataSource.register(email, password, firstName, secondName).map { userDto ->
+            settingsUtils.setProfileData(userDto.id, email, password)
             UserMapper.toDomain(userDto)
         }
     }
 
-    suspend fun validateSession(): Result<User> {
-        val credentials = DataStoreManager.getCredentials()
-        return if (credentials != null) {
-            authDataSource.validateSession().map { userDto ->
-                UserMapper.toDomain(userDto)
-            }
-        } else {
-            Result.failure(Exception("Нет сохраненных учетных данных"))
-        }
-    }
-
-    suspend fun logout() {
-        DataStoreManager.clearCredentials()
+    fun logout() {
+        settingsUtils.clearProfileData()
     }
 }
