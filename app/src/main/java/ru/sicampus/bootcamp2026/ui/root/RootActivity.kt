@@ -29,7 +29,7 @@ class RootActivity : ComponentActivity() {
                     BottomNavigationBar(navController)
                 }
             ){
-                AppNavHost(navController, it)
+                AppNavHost(navController, it,this)
             }
         }
     }

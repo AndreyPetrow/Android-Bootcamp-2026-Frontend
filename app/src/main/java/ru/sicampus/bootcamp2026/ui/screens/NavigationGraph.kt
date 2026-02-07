@@ -1,5 +1,6 @@
 package ru.sicampus.bootcamp2026.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -27,6 +28,7 @@ import ru.sicampus.bootcamp2026.ui.screens.schedule.ScheduleScreen
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
     padding: PaddingValues,
+    context: Context
 ) {
     NavHost(
         navController = navController,
@@ -42,7 +44,7 @@ fun AppNavHost(
         }
 
         composable(ItemsNav.BottomNavItems[2].route) {
-            ProfileScreen()
+            ProfileScreen(context = context)
         }
 
         composable(ItemsNav.BottomNavItems[3].route) {
