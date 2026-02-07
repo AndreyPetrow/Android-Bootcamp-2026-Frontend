@@ -50,17 +50,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.root.RootActivity
 import ru.sicampus.bootcamp2026.ui.screens.navlogin.LoginItemsNav
-import ru.sicampus.bootcamp2026.ui.screens.signup.CustomEmailTextField1
-import ru.sicampus.bootcamp2026.ui.screens.signup.CustomPasswordTextField
 import ru.sicampus.bootcamp2026.ui.theme.BlueMain
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
 import android.util.Patterns

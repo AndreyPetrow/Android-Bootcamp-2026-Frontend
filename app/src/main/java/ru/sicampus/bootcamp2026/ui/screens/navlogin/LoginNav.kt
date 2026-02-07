@@ -31,7 +31,7 @@ fun LoginNavHost(
         }
 
         composable(LoginItemsNav.NavItems[1].route) {
-            SignUpScreen(navHostController =  navController)
+            SignUpScreen(navHostController =  navController, context = context)
         }
 
     }
