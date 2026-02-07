@@ -10,6 +10,7 @@ import io.ktor.http.contentType
 import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingDto
 import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto
 import ru.sicampus.bootcamp2026.data.source.ApiClient
+import ru.sicampus.bootcamp2026.data.source.ApiClientImpl
 import java.time.LocalDate
 
 interface MeetingRepository {
@@ -23,7 +24,7 @@ interface MeetingRepository {
 }
 
 class MeetingRepositoryImpl(
-    private val client: HttpClient = ApiClient.client
+    private val client: HttpClient = ApiClientImpl().client
 ) : MeetingRepository {
 
     override suspend fun createMeeting(meetingData: Map<String, Any>): Result<MeetingDto> {

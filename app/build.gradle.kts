@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "ru.sicampus.bootcamp2026"
-        minSdk = 25
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -51,9 +51,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 
-
     implementation("io.ktor:ktor-client-core:2.3.11")
-    implementation("io.ktor:ktor-client-cio:3.2.0")
+    implementation("io.ktor:ktor-client-cio:3.2.1")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.11")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.11")
     implementation("io.ktor:ktor-client-logging:2.3.11")

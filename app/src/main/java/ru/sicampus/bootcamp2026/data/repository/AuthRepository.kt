@@ -1,5 +1,6 @@
 package ru.sicampus.bootcamp2026.data.repository
 
+
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -8,6 +9,8 @@ import io.ktor.http.contentType
 import ru.sicampus.bootcamp2026.data.dto.auth.LoginRequest
 import ru.sicampus.bootcamp2026.data.dto.auth.RegisterRequest
 import ru.sicampus.bootcamp2026.data.source.ApiClient
+import ru.sicampus.bootcamp2026.data.source.ApiClientImpl
+
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): Result<Unit>
@@ -16,7 +19,7 @@ interface AuthRepository {
 }
 
 class AuthRepositoryImpl(
-    private val client: HttpClient = ApiClient.client
+    private val client: HttpClient = ApiClientImpl().client
 ) : AuthRepository {
 
     override suspend fun login(email: String, password: String): Result<Unit> {

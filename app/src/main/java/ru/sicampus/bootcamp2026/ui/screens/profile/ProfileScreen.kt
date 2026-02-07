@@ -40,15 +40,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.theme.Typography
+import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
+    val settingsUtils = SettingsUtils(App.context)
+
     val searchText = remember { mutableStateOf("") }
-    Box(Modifier
-        .fillMaxSize()
-        .background(Color(0xffEEEEEE))){
+
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 
                 OutlinedTextField(
@@ -58,7 +61,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     label = {
                         Text(
                             stringResource(R.string.search), style =
-                                Typography.bodyLarge, color = Color(0xff49454F)
+                                Typography.bodyLarge
                         )
                     },
                     shape = RoundedCornerShape(15.dp),
