@@ -1,6 +1,8 @@
 package ru.sicampus.bootcamp2026.ui.screens.profile
 
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,11 +44,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
+import ru.sicampus.bootcamp2026.ui.screens.login.LoginActivity
 import ru.sicampus.bootcamp2026.ui.theme.Typography
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier,
+                  context: Context) {
     val settingsUtils = SettingsUtils(App.context)
 
     val searchText = remember { mutableStateOf("") }
@@ -166,7 +170,13 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 }
                 Spacer(Modifier.size(15.dp))
                 Card(
-                    onClick = {}, modifier = Modifier.height(50.dp).fillMaxWidth(0.95f).clip(
+                    onClick = {
+                        SettingsUtils(context = App.context).clear()
+                        context.startActivity(
+                            Intent(context, LoginActivity::class.java)
+                        )
+
+                    }, modifier = Modifier.height(50.dp).fillMaxWidth(0.95f).clip(
                         RoundedCornerShape(15.dp)
                     ), colors = CardDefaults.cardColors(containerColor = Color(0xffFFBBBB))
                 ) {
