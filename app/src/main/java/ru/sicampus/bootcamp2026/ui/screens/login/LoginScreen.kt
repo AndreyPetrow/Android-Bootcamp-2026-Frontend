@@ -1,5 +1,7 @@
 package ru.sicampus.bootcamp2026.ui.screens.login
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -49,10 +51,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
+import ru.sicampus.bootcamp2026.ui.root.RootActivity
+import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(modifier: Modifier = Modifier,
+                context: Context) {
     var emailText by remember { mutableStateOf("") }
     var passText by remember { mutableStateOf("") }
     Box(Modifier.fillMaxSize()) {
@@ -79,7 +85,13 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 Spacer(Modifier.size(20.dp))
                 CustomTextField1(value = passText, onValueChange = {passText = it}, placeholder = stringResource(R.string.password))
                 Spacer(Modifier.size(20.dp))
-                Button(onClick = {}, modifier = Modifier.height(53.dp).fillMaxWidth(0.9f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC))) {
+                Button(onClick = {
+                    context.startActivity(
+                        Intent(App.context, RootActivity::class.java))
+                    SettingsUtils(App.context).setProfileData(
+                        1L, emailText, passText
+                    )
+                }, modifier = Modifier.height(53.dp).fillMaxWidth(0.9f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC))) {
                     Text(stringResource(R.string.login), fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
                 }
                 Spacer(Modifier.size(25.dp))
@@ -174,8 +186,3 @@ fun CustomTextField1(
     }
 }
 
-@Preview
-@Composable
-private fun LoginS() {
-    LoginScreen()
-}
