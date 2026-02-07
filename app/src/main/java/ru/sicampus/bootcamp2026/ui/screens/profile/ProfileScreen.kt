@@ -44,8 +44,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
-import ru.sicampus.bootcamp2026.ui.screens.login.LoginActivity
-import ru.sicampus.bootcamp2026.ui.theme.Typography
+import ru.sicampus.bootcamp2026.ui.login.LoginActivity
+import ru.sicampus.bootcamp2026.ui.root.theme.Typography
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 @Composable

@@ -1,9 +1,7 @@
 package ru.sicampus.bootcamp2026.data.dto.invitation;
 
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable;
-import java.time.LocalDate
-import java.time.LocalTime
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class InvitationDto(

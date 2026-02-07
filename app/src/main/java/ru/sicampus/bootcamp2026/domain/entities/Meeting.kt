@@ -2,6 +2,7 @@ package ru.sicampus.bootcamp2026.domain.entities
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 data class Meeting(
     val id: Long,
@@ -9,11 +10,11 @@ data class Meeting(
     val address: String,
     val description: String? = null,
     val date: String,
-    val timeStart: String,
-    val timeEnd: String,
+    val timeStart: LocalDateTime,
+    val timeEnd: LocalDateTime,
     val organizer: UserMini,
-    val users: List<UserMiniInvitation> = emptyList(),
-    val createdAt: String
+    val participants: List<UserMiniInvitation> = emptyList(),
+    val createdAt: LocalDateTime
 )
 
 data class MeetingMini(
@@ -21,9 +22,9 @@ data class MeetingMini(
     val title: String,
     val description: String? = null,
     val address: String,
-    val date: String,
-    val timeStart: String,
-    val timeEnd: String,
+    val date: LocalDate,
+    val timeStart: LocalTime,
+    val timeEnd: LocalTime,
     val organizer: UserMini
 )
 
@@ -32,7 +33,8 @@ data class MeetingCreate(
     val description: String? = null,
     val address: String,
     val date: String,
-    val timeStart: String,
-    val timeEnd: String,
-    val userId: List<Long> = emptyList()
+    val timeStart: LocalDateTime,
+    val timeEnd: LocalDateTime,
+    val organizerId: Long,
+    val participantIds: List<Long> = emptyList()
 )

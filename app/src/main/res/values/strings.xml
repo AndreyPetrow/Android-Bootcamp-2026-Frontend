@@ -1,10 +1,9 @@
 <resources>
-    <string name="app_name">Android-Bootcamp-2026-Frontend</string>
-    <string name="app_name_label">BookRoom</string>
-    <string name="app_name_desk">Бронирование кабинетов</string>
+    <string name="app_name">Synchro</string>
+    <string name="app_name_desk">Сводим календари</string>
     <string name="login">Войти</string>
     <string name="signup">Зарегистрироваться</string>
-    <string name="email">Email</string>
+    <string name="email">Почта</string>
     <string name="password">Пароль</string>
     <string name="repeat_password">Повторите пароль</string>
     <string name="search">Поиск пользователей</string>
@@ -38,4 +37,6 @@
     <string name="person_name">Имя</string>
     <string name="person_surname">Фамилия</string>
     <string name="title_activity_login">LoginActivity</string>
+
+    <string name="register">Зарегистрироваться</string>
 </resources>

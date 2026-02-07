@@ -1,37 +1,36 @@
-//package ru.sicampus.bootcamp2026.ui.screens.incomingbooks
-//
-//import androidx.lifecycle.ViewModel
-//import androidx.lifecycle.viewModelScope
-//import kotlinx.coroutines.flow.MutableStateFlow
-//import kotlinx.coroutines.flow.StateFlow
-//import kotlinx.coroutines.flow.asStateFlow
-//import kotlinx.coroutines.launch
-//import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto
-//import ru.sicampus.bootcamp2026.domain.usecase.GetInvitationsUseCase
-//import ru.sicampus.bootcamp2026.domain.usecase.RespondToInvitationUseCase
-//
-//data class IncomingState(
-//    val invitations: List<MeetingMiniDto> = emptyList(),
-//    val isLoading: Boolean = false,
-//    val error: String? = null
-//)
-//
-//class IncomingViewModel(
-//    private val getInvitationsUseCase: GetInvitationsUseCase,
-//    private val respondToInvitationUseCase: RespondToInvitationUseCase
-//) : ViewModel() {
-//
-//    private val _state = MutableStateFlow(IncomingState())
-//    val state: StateFlow<IncomingState> = _state.asStateFlow()
-//
-//    init {
-//        loadInvitations()
-//    }
-//
-//    fun loadInvitations() {
-//        viewModelScope.launch {
-//            _state.value = _state.value.copy(isLoading = true, error = null)
-//
+package ru.sicampus.bootcamp2026.ui.screens.incomingbooks
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto
+
+
+data class IncomingState(
+    val invitations: List<MeetingMiniDto> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
+
+class IncomingViewModel(
+    //private val getInvitationsUseCase: GetInvitationsUseCase,
+    //private val respondToInvitationUseCase: RespondToInvitationUseCase
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(IncomingState())
+    val state: StateFlow<IncomingState> = _state.asStateFlow()
+
+    init {
+        loadInvitations()
+    }
+
+    fun loadInvitations() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+
 //            val result = getInvitationsUseCase("pending")
 //
 //            result.fold(
@@ -49,14 +48,12 @@
 //                    )
 //                }
 //            )
-//        }
-//    }
-//
-//    fun respondToInvitation(meetingId: Long, accept: Boolean) {
-//        viewModelScope.launch {
-//            _state.value = _state.value.copy(isLoading = true, error = null)
-//
-//            val result = respondToInvitationUseCase(meetingId, accept)
+        }
+    }
+
+    fun respondToInvitation(meetingId: Long, accept: Boolean) {
+        viewModelScope.launch {
+            //_state.value = _state.value.copy(ival result = respondToInvitationUseCase(meetingId, accept)
 //
 //            result.fold(
 //                onSuccess = {
@@ -72,11 +69,13 @@
 //                        error = error.message ?: "Ошибка отправки ответа"
 //                    )
 //                }
-//            )
-//        }
-//    }
+//            )sLoading = true, error = null)
+
 //
-//    fun clearError() {
-//        _state.value = _state.value.copy(error = null)
-//    }
-//}
+        }
+    }
+
+    fun clearError() {
+        _state.value = _state.value.copy(error = null)
+    }
+}

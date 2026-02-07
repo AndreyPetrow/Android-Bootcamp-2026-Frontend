@@ -15,9 +15,8 @@ class SettingsUtils(context: Context) {
 
     // ===== setters =====
 
-    fun setProfileData(userId: Long, email: String, password: String) {
+    fun setProfileData(email: String, password: String) {
         settings.edit {
-            putLong(SettingConstants.USER_ID, userId)
             putString(SettingConstants.EMAIL, email)
             putString(SettingConstants.PASSWORD, password)
         }
@@ -63,6 +62,6 @@ class SettingsUtils(context: Context) {
             "(SettingsUtils.checkCodeExists) данные, сохранённые в настройках: $userId, $email, $password"
         )
 
-        return userId != -1L && email != null && password != null
+        return email != null && password != null
     }
 }

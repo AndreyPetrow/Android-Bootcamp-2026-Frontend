@@ -8,9 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.rememberNavController
 import ru.sicampus.bootcamp2026.App
-import ru.sicampus.bootcamp2026.ui.screens.AppNavHost
-import ru.sicampus.bootcamp2026.ui.screens.BottomNavigationBar
-import ru.sicampus.bootcamp2026.ui.screens.login.LoginActivity
+import ru.sicampus.bootcamp2026.ui.login.LoginActivity
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 class RootActivity : ComponentActivity() {
@@ -18,11 +16,14 @@ class RootActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            if (SettingsUtils(App.context).getEmail().isNullOrEmpty()){
+            if (!SettingsUtils(App.context).checkProfileExists()) {
                 this.startActivity(
-                    Intent(this, LoginActivity::class.java)
+                    Intent(this, LoginActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
                 )
             }
+
             val navController = rememberNavController()
             Scaffold(
                 bottomBar = {

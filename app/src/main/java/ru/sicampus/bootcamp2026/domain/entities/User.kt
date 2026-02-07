@@ -1,5 +1,6 @@
 package ru.sicampus.bootcamp2026.domain.entities
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class User(
@@ -12,8 +13,8 @@ data class User(
     val department: String? = null,
     val photoUrl: String,
     val role: String,
-    val createdAt: String,
-    val updatedAt: String
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
 )
 
 data class UserMini(
@@ -29,7 +30,7 @@ data class UserMiniInvitation(
     val secondName: String,
     val photoUrl: String,
     val status: String,
-    val respondedAt: String
+    val respondedAt: LocalDateTime
 )
 
 data class UserUpdate(

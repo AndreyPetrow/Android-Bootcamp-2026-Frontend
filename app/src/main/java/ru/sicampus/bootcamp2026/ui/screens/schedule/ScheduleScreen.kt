@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,8 +48,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
-import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
-import ru.sicampus.bootcamp2026.ui.theme.BlueMain
+import ru.sicampus.bootcamp2026.ui.root.nav.ItemsNav
+import ru.sicampus.bootcamp2026.ui.root.theme.BlueMain
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale

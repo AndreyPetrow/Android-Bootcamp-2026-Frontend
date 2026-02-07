@@ -66,10 +66,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
-import ru.sicampus.bootcamp2026.ui.navigation.ItemsNav
-import ru.sicampus.bootcamp2026.ui.theme.BackgroundColor
-import ru.sicampus.bootcamp2026.ui.theme.BlueMain
-import ru.sicampus.bootcamp2026.ui.theme.GrayTextColor
+import ru.sicampus.bootcamp2026.ui.root.nav.ItemsNav
+import ru.sicampus.bootcamp2026.ui.root.theme.BackgroundColor
+import ru.sicampus.bootcamp2026.ui.root.theme.BlueMain
+import ru.sicampus.bootcamp2026.ui.root.theme.GrayTextColor
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime

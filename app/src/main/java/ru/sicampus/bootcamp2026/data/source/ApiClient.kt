@@ -11,10 +11,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import ru.sicampus.bootcamp2026.data.source.Config.BASE_URL
+import ru.sicampus.bootcamp2026.core.Constants
 
 object ApiClient {
-
     val client by lazy {
         HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -22,6 +21,7 @@ object ApiClient {
                     Json {
                         isLenient = true
                         ignoreUnknownKeys = true
+                        encodeDefaults = false
                     }
                 )
             }
@@ -29,13 +29,13 @@ object ApiClient {
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        Log.d("KTOR", message)
+                        Log.d("test", message)
                     }
                 }
             }
 
             defaultRequest {
-                url("${BASE_URL}/api/v1/")
+                url(Constants.BASE_URL)
                 contentType(ContentType.Application.Json)
             }
         }

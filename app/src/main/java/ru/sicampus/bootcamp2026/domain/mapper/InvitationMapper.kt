@@ -4,6 +4,7 @@ import ru.sicampus.bootcamp2026.data.dto.invitation.InvitationDto
 import ru.sicampus.bootcamp2026.data.dto.invitation.UserMiniInvitationDto
 import ru.sicampus.bootcamp2026.domain.entities.Invitation
 import ru.sicampus.bootcamp2026.domain.entities.UserMiniInvitation
+import java.time.LocalDateTime
 
 object InvitationMapper {
 
@@ -14,7 +15,7 @@ object InvitationMapper {
             secondName = domain.secondName,
             photoUrl = domain.photoUrl,
             status = domain.status,
-            respondedAt = domain.respondedAt,
+            respondedAt = domain.respondedAt.toString(),
         )
     }
 
@@ -25,7 +26,7 @@ object InvitationMapper {
             secondName = dto.secondName,
             photoUrl = dto.photoUrl,
             status = dto.status,
-            respondedAt = dto.respondedAt,
+            respondedAt = LocalDateTime.parse(dto.respondedAt),
         )
     }
 
