@@ -4,13 +4,13 @@ import java.time.LocalDateTime
 
 data class User(
     val id: Long,
+    val email: String,
     val firstName: String,
     val secondName: String,
-    val email: String? = null,
     val description: String? = null,
     val position: String? = null,
     val department: String? = null,
-    val photoUrl: String? = null,
+    val photoUrl: String,
     val role: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
@@ -20,16 +20,16 @@ data class UserMini(
     val id: Long,
     val firstName: String,
     val secondName: String,
-    val photoUrl: String? = null
+    val photoUrl: String
 )
 
 data class UserMiniInvitation(
     val id: Long,
     val firstName: String,
     val secondName: String,
-    val photoUrl: String? = null,
+    val photoUrl: String,
     val status: String,
-    val respondedAt: String? = null
+    val respondedAt: String
 )
 
 data class UserUpdate(
