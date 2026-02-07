@@ -53,12 +53,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
-
+import ru.sicampus.bootcamp2026.ui.screens.navlogin.LoginItemsNav
 
 
 @Composable
-fun SignUpScreen(modifier: Modifier = Modifier) {
+fun SignUpScreen(modifier: Modifier = Modifier,
+                 navHostController: NavHostController) {
             var emailText by remember { mutableStateOf("") }
             var passText by remember { mutableStateOf("") }
             var pass2Text by remember { mutableStateOf("") }
@@ -122,6 +124,10 @@ fun SignUpScreen(modifier: Modifier = Modifier) {
                                 .fillMaxWidth(0.9f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC))) {
                                 Text(stringResource(R.string.signup), fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                             }
+                            Spacer(Modifier.size(10.dp))
+                            Text("Войти", Modifier.clickable(onClick = {
+                                navHostController.navigate(LoginItemsNav.NavItems[0].route)
+                            }))
                             Spacer(Modifier.size(25.dp))
                         }
                     }
@@ -440,8 +446,3 @@ fun CustomPasswordTextField(
     }
 }
 
-        @Preview
-        @Composable
-        private fun fafawf() {
-            SignUpScreen()
-        }

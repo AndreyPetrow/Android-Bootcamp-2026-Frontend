@@ -51,14 +51,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.root.RootActivity
+import ru.sicampus.bootcamp2026.ui.screens.navlogin.LoginItemsNav
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier,
-                context: Context) {
+                context: Context, navHostController: NavHostController) {
     var emailText by remember { mutableStateOf("") }
     var passText by remember { mutableStateOf("") }
     Box(Modifier.fillMaxSize()) {
@@ -94,6 +96,11 @@ fun LoginScreen(modifier: Modifier = Modifier,
                 }, modifier = Modifier.height(53.dp).fillMaxWidth(0.9f), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff155DFC))) {
                     Text(stringResource(R.string.login), fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
                 }
+                Spacer(Modifier.size(10.dp))
+                Text("Зарегистрироваться", Modifier.clickable(onClick ={
+                    navHostController.navigate(LoginItemsNav.NavItems[1].route)
+                }
+                ))
                 Spacer(Modifier.size(25.dp))
             }
         }
