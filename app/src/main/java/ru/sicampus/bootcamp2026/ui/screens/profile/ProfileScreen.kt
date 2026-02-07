@@ -199,23 +199,31 @@ fun Content(viewModel: ProfileViewModel) {
                             }
                         }
                     }
-                    Box(
+
+                    Card(
+                        onClick = {
+
+                        },
                         modifier = Modifier.height(50.dp).fillMaxWidth(0.95f)
                             .clip(RoundedCornerShape(15.dp))
-                            .border(1.dp, color = Color(0xff2F458B), shape = RoundedCornerShape(16.dp))
-                            .clickable {}.background(
-                                Color.White
-                            )
+                            .border(1.dp, color = Color(0xff2F458B), shape = RoundedCornerShape(16.dp)),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
-                        Text(
-                            stringResource(R.string.edit),
-                            color = Color(0xff0A266C),
-                            modifier = Modifier.align(Alignment.Center),
-                            textAlign = TextAlign.Center,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        Row(
+                            Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                stringResource(R.string.edit),
+                                color = Color(0xff0A266C),
+                                textAlign = TextAlign.Center,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
+
                     Spacer(Modifier.size(15.dp))
                     Card(
                         onClick = {
