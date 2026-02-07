@@ -1,61 +1,44 @@
 package ru.sicampus.bootcamp2026.data.repository
 
+import ru.sicampus.bootcamp2026.data.source.dataSource.AuthDataSource
+import ru.sicampus.bootcamp2026.data.source.DataStoreManager
+import ru.sicampus.bootcamp2026.domain.entities.User
+import ru.sicampus.bootcamp2026.domain.mapper.UserMapper
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import ru.sicampus.bootcamp2026.data.dto.auth.LoginRequest
-import ru.sicampus.bootcamp2026.data.dto.auth.RegisterRequest
-import ru.sicampus.bootcamp2026.data.source.ApiClient
-import ru.sicampus.bootcamp2026.data.source.ApiClientImpl
-
-
-interface AuthRepository {
-    suspend fun login(email: String, password: String): Result<Unit>
-    suspend fun register(email: String, password: String, firstName: String, secondName: String): Result<Unit>
-    suspend fun validateToken(): Result<Unit>
-}
-
-class AuthRepositoryImpl(
-    private val client: HttpClient = ApiClientImpl().client
-) : AuthRepository {
-
-    override suspend fun login(email: String, password: String): Result<Unit> {
-        return try {
-            val request = LoginRequest(email, password)
-            // TODO: Заменить на реальный endpoint
-            val response = client.post("http://10.0.2.2:8080/api/v1/auth/login") {
-                contentType(ContentType.Application.Json)
-                setBody(request)
-            }
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+class AuthRepository(
+    private val authDataSource: AuthDataSource
+) {
+    suspend fun login(email: String, password: String): Result<User> {
+        return authDataSource.login(email, password).map { userDto ->
+            DataStoreManager.saveCredentials(email, password)
+            UserMapper.toDomain(userDto)
         }
     }
 
-    override suspend fun register(email: String, password: String, firstName: String, secondName: String): Result<Unit> {
-        return try {
-            val request = RegisterRequest(email, password, firstName, secondName)
-            // TODO: Заменить на реальный endpoint
-            val response = client.post("http://10.0.2.2:8080/api/v1/auth/register") {
-                contentType(ContentType.Application.Json)
-                setBody(request)
-            }
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+    suspend fun register(
+        email: String,
+        password: String,
+        firstName: String,
+        secondName: String
+    ): Result<User> {
+        return authDataSource.register(email, password, firstName, secondName).map { userDto ->
+            DataStoreManager.saveCredentials(email, password)
+            UserMapper.toDomain(userDto)
         }
     }
 
-    override suspend fun validateToken(): Result<Unit> {
-        return try {
-            // TODO: Реализовать проверку токена
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+    suspend fun validateSession(): Result<User> {
+        val credentials = DataStoreManager.getCredentials()
+        return if (credentials != null) {
+            authDataSource.validateSession().map { userDto ->
+                UserMapper.toDomain(userDto)
+            }
+        } else {
+            Result.failure(Exception("Нет сохраненных учетных данных"))
         }
+    }
+
+    suspend fun logout() {
+        DataStoreManager.clearCredentials()
     }
 }
