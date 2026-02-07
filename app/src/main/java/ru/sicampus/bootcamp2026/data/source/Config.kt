@@ -2,7 +2,7 @@ package ru.sicampus.bootcamp2026.data.source
 
 //наверное лучше по другому, но так вроде хорошо
 object Config {
-    const val BASE_URL = "http://10.0.2.2:8080/api/v1"
+    const val BASE_URL = "http://192.168.1.41:8080"
 
     // Auth endp-s
     const val LOGIN_ENDPOINT = "/auth/login"

@@ -1,5 +1,6 @@
 package ru.sicampus.bootcamp2026.ui.screens.login
 
+import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -45,16 +46,27 @@ class LoginViewModel(private val authUseCase: AuthorizeUseCase) : ViewModel() {
             )
 
             result.fold(
-                onSuccess = {
-                    _uiState.update { state ->
-                        state.copy(
-                            isLoading = false,
-                            isLoginSuccess = true,
-                            errorMessage = null
-                        )
+                onSuccess = { isSuccess ->
+                    if (isSuccess) {
+                        _uiState.update { state ->
+                            state.copy(
+                                isLoading = false,
+                                isLoginSuccess = true,
+                                errorMessage = null
+                            )
+                        }
+                    } else {
+                        _uiState.update { state ->
+                            state.copy(
+                                isLoading = false,
+                                isLoginSuccess = false,
+                                errorMessage = "Неверный email или пароль"
+                            )
+                        }
                     }
                 },
                 onFailure = { error ->
+                    Log.e("LoginViewModel", "Login error: ${error.message}", error)
                     _uiState.update { state ->
                         state.copy(
                             isLoading = false,

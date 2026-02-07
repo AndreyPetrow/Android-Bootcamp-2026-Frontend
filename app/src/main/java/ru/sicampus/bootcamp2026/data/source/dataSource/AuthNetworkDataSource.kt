@@ -31,7 +31,7 @@ class AuthNetworkDataSource {
 
     suspend fun checkAuth(token: String?): Result<Boolean> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = ApiClient.client.get("/auth/login"){
+            val result = ApiClient.client.get("auth/login"){
                 header(HttpHeaders.Authorization, token)
             }
             result.status == HttpStatusCode.OK
