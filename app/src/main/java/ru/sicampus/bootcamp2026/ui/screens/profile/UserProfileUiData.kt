@@ -8,5 +8,11 @@ data class UserProfileUiData(
     val description: String? = null,
     val photoUrl: String = "",
 
+    val updateFirstName: String = "",
+    val updateSecondName: String = "",
+    val updatePosition:  String? = null,
+    val updateDepartment:  String? = null,
+    val updateDescription:  String? = null,
+
     val errorMessage: String? = null
 )

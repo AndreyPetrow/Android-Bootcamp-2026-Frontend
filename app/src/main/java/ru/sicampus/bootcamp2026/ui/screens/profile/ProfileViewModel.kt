@@ -12,11 +12,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.domain.usecase.user.GetUserByIdUseCase
+import ru.sicampus.bootcamp2026.domain.usecase.user.UserUpdateUseCase
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 
 class ProfileViewModel(
-    private val getUserByIdUseCase: GetUserByIdUseCase
+    private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val updateUseCase: UserUpdateUseCase
 ) : ViewModel() {
     private val settingsUtils = SettingsUtils(App.context)
 
@@ -63,6 +65,42 @@ class ProfileViewModel(
         }
     }
 
+    private fun updateUser() {
+        _uiState.update { ProfileState.EditData }
+
+        viewModelScope.launch {
+            val result = updateUseCase(
+                settingsUtils.getUserId(),
+                _state.value.updateFirstName,
+                _state.value.updateSecondName,
+                _state.value.updateDescription,
+                _state.value.updatePosition,
+                _state.value.updateDepartment,
+            )
+
+            result.onSuccess { user ->
+                _state.update { state ->
+                    state.copy(
+                        fullName = user.firstName + " " + user.secondName,
+                        email = user.email,
+                        position = user.position,
+                        department = user.department,
+                        description = user.description,
+                        photoUrl = user.photoUrl
+                    )
+                }
+                _uiState.update { ProfileState.Data }
+            }.onFailure { error ->
+                _state.update { state ->
+                    state.copy(
+                        errorMessage = error.message ?: "Ошибка обновления"
+                    )
+                }
+                _uiState.update { ProfileState.Error }
+            }
+        }
+    }
+
     fun navigate(actionState: ActionState) {
         viewModelScope.launch {
             _navigationEvents.send(actionState)
@@ -71,6 +109,43 @@ class ProfileViewModel(
 
     fun load() {
         loadUserData()
+    }
+
+    fun startUprate() {
+        _uiState.update { ProfileState.EditData }
+        _state.update { state ->
+            state.copy(
+                updateFirstName = state.fullName.split(" ")[0],
+                updateSecondName = state.fullName.split(" ")[1],
+                updatePosition = state.position,
+                updateDepartment = state.department,
+                updateDescription = state.description
+            )
+        }
+    }
+
+    fun update() {
+        updateUser()
+    }
+
+    fun onFirstNameChange(firstName: String) {
+        _state.update { it.copy(updateFirstName = firstName) }
+    }
+
+    fun onSecondNameChange(secondName: String) {
+        _state.update { it.copy(updateSecondName = secondName) }
+    }
+
+    fun onPositionChange(position: String) {
+        _state.update { it.copy(updatePosition = position) }
+    }
+
+    fun onDepartmentChange(department: String) {
+        _state.update { it.copy(updateDepartment = department) }
+    }
+
+    fun onDescriptionChange(description: String) {
+        _state.update { it.copy(updateDescription = description) }
     }
 
 //    fun onEditClick() {
