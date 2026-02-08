@@ -17,13 +17,13 @@ object BookViewModelFactory {
     fun create(context: Context): ViewModelProvider.Factory = viewModelFactory {
         initializer {
             val settingsUtils = SettingsUtils(context)
+            val authLocalDataSource = AuthLocalDataSource
 
             val meetingDataSource = MeetingDataSource()
-            val meetingRepository = MeetingRepository(meetingDataSource)
+            val meetingRepository = MeetingRepository(meetingDataSource, authLocalDataSource, settingsUtils)
             val createMeetingUseCase = CreateMeetingUseCase(meetingRepository)
 
             val userDataSource = UserDataSource()
-            val authLocalDataSource = AuthLocalDataSource
             val userRepository = UserRepository(userDataSource, authLocalDataSource, settingsUtils)
             val searchUserUseCase = SearchUserUseCase(userRepository)
 

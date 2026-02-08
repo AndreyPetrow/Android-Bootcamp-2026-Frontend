@@ -4,7 +4,9 @@ import ru.sicampus.bootcamp2026.data.dto.invitation.InvitationDto
 import ru.sicampus.bootcamp2026.data.dto.invitation.UserMiniInvitationDto
 import ru.sicampus.bootcamp2026.domain.entities.Invitation
 import ru.sicampus.bootcamp2026.domain.entities.UserMiniInvitation
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 object InvitationMapper {
 
@@ -39,9 +41,9 @@ object InvitationMapper {
             meetingId = domain.meetingId,
             title = domain.title,
             address = domain.address,
-            date = domain.date,
-            timeStart = domain.timeStart,
-            timeEnd = domain.timeEnd
+            date = domain.date.toString(),
+            timeStart = domain.timeStart.toString(),
+            timeEnd = domain.timeEnd.toString()
         )
     }
 
@@ -54,9 +56,9 @@ object InvitationMapper {
             meetingId = dto.meetingId,
             title = dto.title,
             address = dto.address,
-            date = dto.date,
-            timeStart = dto.timeStart,
-            timeEnd = dto.timeEnd
+            date = LocalDate.parse(dto.date),
+            timeStart = LocalTime.parse(dto.timeStart),
+            timeEnd = LocalTime.parse(dto.timeEnd)
         )
     }
 }

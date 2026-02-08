@@ -57,7 +57,7 @@ class ProfileViewModel(
             }.onFailure { error ->
                 _state.update { state ->
                     state.copy(
-                        errorMessage = error.message ?: "Ошибка регистрации"
+                        errorMessage = error.message ?: "Ошибка загрузки данных"
                     )
                 }
                 _uiState.update { ProfileState.Error }

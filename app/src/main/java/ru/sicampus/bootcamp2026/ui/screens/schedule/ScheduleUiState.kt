@@ -9,6 +9,5 @@ data class ScheduleUiState(
     val dayMeetings: List<MeetingMini> = emptyList(),
     val weekMeetings: Map<LocalDate, List<MeetingMini>> = emptyMap(),
     val monthMeetings: Map<LocalDate, List<MeetingMini>> = emptyMap(),
-    val isLoading: Boolean = false,
-    val error: String? = null
+    val errorMessage: String? = null
 )
