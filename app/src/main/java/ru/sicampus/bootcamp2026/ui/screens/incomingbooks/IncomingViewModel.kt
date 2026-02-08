@@ -6,22 +6,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto
-
-
-data class IncomingState(
-    val invitations: List<MeetingMiniDto> = emptyList(),
-    val isLoading: Boolean = false,
-    val error: String? = null
-)
+import ru.sicampus.bootcamp2026.domain.entities.InvitationStatus
+import ru.sicampus.bootcamp2026.domain.usecase.invitation.GetInvitationsUseCase
+import ru.sicampus.bootcamp2026.domain.usecase.invitation.RespondToInvitationUseCase
 
 class IncomingViewModel(
-    //private val getInvitationsUseCase: GetInvitationsUseCase,
-    //private val respondToInvitationUseCase: RespondToInvitationUseCase
+    private val getInvitationsUseCase: GetInvitationsUseCase,
+    private val respondToInvitationUseCase: RespondToInvitationUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(IncomingState())
-    val state: StateFlow<IncomingState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(IncomingUiState())
+    val state: StateFlow<IncomingUiState> = _state.asStateFlow()
 
     init {
         loadInvitations()
@@ -31,47 +26,47 @@ class IncomingViewModel(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
 
-//            val result = getInvitationsUseCase("pending")
-//
-//            result.fold(
-//                onSuccess = { invitations ->
-//                    _state.value = _state.value.copy(
-//                        isLoading = false,
-//                        invitations = invitations
-//                    )
-//                },
-//                onFailure = { error ->
-//                    _state.value = _state.value.copy(
-//                        isLoading = false,
-//                        error = error.message ?: "Ошибка загрузки приглашений",
-//                        invitations = emptyList()
-//                    )
-//                }
-//            )
+            val result = getInvitationsUseCase()
+
+            result.fold(
+                onSuccess = { invitations ->
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        invitations = invitations
+                    )
+                },
+                onFailure = { error ->
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = error.message ?: "Ошибка загрузки приглашений",
+                        invitations = emptyList()
+                    )
+                }
+            )
         }
     }
 
-    fun respondToInvitation(meetingId: Long, accept: Boolean) {
+    fun respondToInvitation(invitationId: Long, accept: Boolean) {
         viewModelScope.launch {
-            //_state.value = _state.value.copy(ival result = respondToInvitationUseCase(meetingId, accept)
-//
-//            result.fold(
-//                onSuccess = {
-//                    // Удалить приглашение из списка после ответа
-//                    _state.value = _state.value.copy(
-//                        isLoading = false,
-//                        invitations = _state.value.invitations.filter { it.id != meetingId }
-//                    )
-//                },
-//                onFailure = { error ->
-//                    _state.value = _state.value.copy(
-//                        isLoading = false,
-//                        error = error.message ?: "Ошибка отправки ответа"
-//                    )
-//                }
-//            )sLoading = true, error = null)
+            _state.value = _state.value.copy(isLoading = true, error = null)
 
-//
+            val status = if (accept) InvitationStatus.ACCEPTED else InvitationStatus.DECLINED
+            val result = respondToInvitationUseCase(invitationId, status)
+
+            result.fold(
+                onSuccess = {
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        invitations = _state.value.invitations.filter { it.id != invitationId }
+                    )
+                },
+                onFailure = { error ->
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = error.message ?: "Ошибка отправки ответа"
+                    )
+                }
+            )
         }
     }
 

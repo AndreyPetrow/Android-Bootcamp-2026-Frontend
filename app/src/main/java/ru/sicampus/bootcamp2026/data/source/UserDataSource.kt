@@ -14,9 +14,7 @@ class UserDataSource {
 
     suspend fun getUserById(token: String?, userId: Long): Result<UserDto> = withContext(Dispatchers.IO) {
         runCatching {
-            val response = ApiClient.client.get(Constants.GET_BY_ID_ENDPOINT + userId) {
-                header(HttpHeaders.Authorization, token)
-            }
+            val response = ApiClient.client.get(Constants.GET_BY_ID_ENDPOINT + userId)
 
             when (response.status) {
                 HttpStatusCode.OK -> response.body<UserDto>()

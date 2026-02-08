@@ -17,7 +17,7 @@ import ru.sicampus.bootcamp2026.utils.SettingsUtils
 object ProfileViewModelFactory {
     fun create(context: Context): ViewModelProvider.Factory = viewModelFactory {
         initializer {
-            val authLocalDataSource = AuthLocalDataSource()
+            val authLocalDataSource = AuthLocalDataSource
             val userDataSource = UserDataSource()
             val settingsUtils = SettingsUtils(context)
             val userRepository = UserRepository(userDataSource, authLocalDataSource, settingsUtils)
