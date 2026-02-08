@@ -82,13 +82,14 @@ import java.util.Locale
 fun BookScreen(navHostController: NavHostController) {
     var currentDate = remember { mutableStateOf(LocalDate.now()) }
     val currentTime = remember { mutableStateOf(LocalTime.now()) }
-    val endTime = remember { mutableStateOf(currentTime.value.plusHours(1))}
+    val endTime = remember { mutableStateOf(currentTime.value.plusHours(2).minusMinutes(currentTime.value.minute.toLong()))}
     val labelText = remember { mutableStateOf("") }
     val descText = remember { mutableStateOf("") }
     val cabinet = remember { mutableStateOf("") }
     val personCounter = remember { mutableStateOf(0) }
     var showDateP = remember { mutableStateOf(false) }
     var showTimeP = remember { mutableStateOf(false) }
+    var showTimePEnd = remember { mutableStateOf(false) }
     if (currentTime.value.minute != 0) currentTime.value = currentTime.value.plusHours(1).minusMinutes(currentTime.value.minute.toLong())
     Box(contentAlignment = Alignment.Center) {
         Column(
@@ -154,7 +155,7 @@ fun BookScreen(navHostController: NavHostController) {
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
-            DatePickerForBook(currentDate, currentTime, cabinet =  cabinet, enabled1 =  showDateP, enabled2 =  showTimeP,
+            DatePickerForBook(currentDate, currentTime, cabinet =  cabinet, enabled1 =  showDateP, enabled2 =  showTimeP, enabled3 = showTimePEnd,
                 endTime =  endTime)
             Text(
                 stringResource(R.string.participant),
@@ -204,7 +205,20 @@ fun BookScreen(navHostController: NavHostController) {
                     currentTime = currentTime,
                     onDismiss = { showTimeP.value = false },
                     onCon = {
-                        showTimeP.value = false }
+                        showTimeP.value = false
+                    if (currentTime.value > endTime.value) endTime.value = currentTime.value.plusHours(1)}
+                )
+            }
+        }
+        if (showTimePEnd.value) {
+            showDateP.value = false
+            showTimeP.value = false
+            Box(Modifier.shadow(3.dp, RoundedCornerShape(15.dp)).clip(RoundedCornerShape(15.dp)).background(Color.White), contentAlignment = Alignment.Center) {
+                TimePicker1(
+                    currentTime = endTime,
+                    onDismiss = { showTimePEnd.value = false },
+                    onCon = {
+                        showTimePEnd.value = false }
                 )
             }
         }
@@ -288,10 +302,10 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
                       endTime: MutableState<LocalTime>,
                       cabinet: MutableState<String>,
                       enabled1: MutableState<Boolean>,
-                      enabled2: MutableState<Boolean>) {
+                      enabled2: MutableState<Boolean>,
+                      enabled3: MutableState<Boolean>) {
 //    val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
 //    val currentDateAndTime = sdf.format(currentTime.value)
-    endTime.value = currentTime.value.plusHours(1)
     Box(Modifier
         .padding(start = 16.dp, end = 16.dp, top = 10.dp)
         .shadow(3.dp, RoundedCornerShape(15.dp))
@@ -346,7 +360,7 @@ fun DatePickerForBook(currentDate: MutableState<LocalDate>,
                             )), fontSize = 14.sp, fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(top = 4.dp, bottom = 2.dp))
                         }
-                        IconButton(onClick = {enabled2.value = !enabled2.value}) {
+                        IconButton(onClick = {enabled3.value = !enabled3.value}) {
                             Icon(painterResource(R.drawable.clock), "",
                                 Modifier.size(16.dp))
                         }
