@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -106,326 +107,338 @@ fun BookScreen(
         }
     }
     Box(contentAlignment = Alignment.Center) {
-        Column(
+        LazyColumn(
             Modifier.fillMaxSize().background(BackgroundColor),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                Modifier.height(50.dp).fillMaxWidth()
-                    .shadow(3.dp, RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp))
-                    .background(Color.White)
-            ) {
-                Row(Modifier.fillMaxWidth()) {
-                    TextButton(
-                        onClick = {
-                            navHostController.popBackStack()
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.cancel),
-                            color = GrayTextColor,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Start,
-                            fontSize = 16.sp
-                        )
-                    }
-                    Text(
-                        stringResource(R.string.new_meet),
-                        Modifier.align(Alignment.CenterVertically).weight(2f),
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    TextButton(
-                        onClick = {
-                            vm.createMeeting()
-                        },
-                        modifier = Modifier.weight(1f),
-                        enabled = !state.isLoading && validateMeeting(state)
-                    ) {
-                        if (state.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                strokeWidth = 2.dp,
-                                color = BlueMain
-                            )
-                        } else {
+            item {
+                Box(
+                    Modifier.height(50.dp).fillMaxWidth()
+                        .shadow(3.dp, RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp))
+                        .background(Color.White)
+                ) {
+                    Row(Modifier.fillMaxWidth()) {
+                        TextButton(
+                            onClick = {
+                                navHostController.popBackStack()
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
                             Text(
-                                stringResource(R.string.success),
-                                color = if (validateMeeting(state)) BlueMain else GrayTextColor,
+                                text = stringResource(R.string.cancel),
+                                color = GrayTextColor,
                                 modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.End,
+                                textAlign = TextAlign.Start,
                                 fontSize = 16.sp
                             )
                         }
-                    }
-                }
-            }
-            state.errorMessage?.let { error ->
-                Text(
-                    text = error,
-                    color = Color.Red,
-                    fontSize = 14.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
-
-            Text(
-                stringResource(R.string.main_word),
-                Modifier.fillMaxWidth().padding(start = 16.dp, top = 16.dp, bottom = 10.dp),
-                color = GrayTextColor,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
-            )
-            CustomTextField2(
-                value = state.title,
-                onValueChange = vm::onTitleChange,
-                placeholder = stringResource(R.string.label),
-                modifier = Modifier.padding(horizontal = 16.dp).shadow(3.dp, RoundedCornerShape(15.dp)),
-                height = 50
-            )
-            CustomTextField2(
-                value = state.description,
-                onValueChange = vm::onDescriptionChange,
-                placeholder = stringResource(R.string.description),
-                modifier = Modifier.height(110.dp).padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                    .shadow(3.dp, RoundedCornerShape(15.dp)),
-                height = 110
-            )
-
-            Text(
-                stringResource(R.string.date_and_place),
-                modifier = Modifier.fillMaxWidth().padding(top = 25.dp, start = 16.dp),
-                color = GrayTextColor,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
-            )
-            DatePickerForBook(
-                currentDate = state.selectedDate,
-                currentTime = state.selectedStartTime,
-                cabinet = state.cabinet,
-                onCabinetChange = vm::onCabinetChange,
-                onDateClick = { showDatePicker.value = true },
-                onStartTimeClick = { showStartTimePicker.value = true },
-                onEndTimeClick = { showEndTimePicker.value = true },
-                endTime = state.selectedEndTime
-            )
-            Text(
-                stringResource(R.string.participant),
-                modifier = Modifier.fillMaxWidth().padding(top = 20.dp, start = 16.dp),
-                color = GrayTextColor,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
-            )
-            Box(
-                Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 7.dp)
-                    .height(70.dp)
-                    .shadow(3.dp, RoundedCornerShape(15.dp))
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(Color.White)
-            ) {
-                Column(Modifier.fillMaxSize()) {
-                    Row(
-                        Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 14.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
                         Text(
-                            "${state.selectedUsers.size} из 100",
-                            fontSize = 14.sp,
+                            stringResource(R.string.new_meet),
+                            Modifier.align(Alignment.CenterVertically).weight(2f),
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center,
                             fontWeight = FontWeight.SemiBold
                         )
-                        Spacer(Modifier.width(10.dp))
-                        Box(Modifier.weight(1f)) {
-                            CustomTextField2(
-                                value = state.searchQuery,
-                                onValueChange = vm::onSearchQueryChange,
-                                placeholder = stringResource(R.string.search),
-                                height = 40,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                        TextButton(
+                            onClick = {
+                                vm.createMeeting()
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = !state.isLoading && validateMeeting(state)
+                        ) {
+                            if (state.isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    strokeWidth = 2.dp,
+                                    color = BlueMain
+                                )
+                            } else {
+                                Text(
+                                    stringResource(R.string.success),
+                                    color = if (validateMeeting(state)) BlueMain else GrayTextColor,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.End,
+                                    fontSize = 16.sp
+                                )
+                            }
                         }
                     }
                 }
-            }
-            Spacer(Modifier.height(5.dp))
-            if (state.selectedUsers.isNotEmpty()) {
-                val selectedUserDetails = state.searchResults.filter { it.id in state.selectedUsers }
-                if (selectedUserDetails.isNotEmpty()) {
+                state.errorMessage?.let { error ->
                     Text(
-                        "Выбранные участники:",
-                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, bottom = 8.dp),
-                        color = GrayTextColor,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp
-                    )
-                    FlowRow(
+                        text = error,
+                        color = Color.Red,
+                        fontSize = 14.sp,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+
+                Text(
+                    stringResource(R.string.main_word),
+                    Modifier.fillMaxWidth().padding(start = 16.dp, top = 16.dp, bottom = 10.dp),
+                    color = GrayTextColor,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+                CustomTextField2(
+                    value = state.title,
+                    onValueChange = vm::onTitleChange,
+                    placeholder = stringResource(R.string.label),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                        .shadow(3.dp, RoundedCornerShape(15.dp)),
+                    height = 50
+                )
+                CustomTextField2(
+                    value = state.description,
+                    onValueChange = vm::onDescriptionChange,
+                    placeholder = stringResource(R.string.description),
+                    modifier = Modifier.height(110.dp)
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                        .shadow(3.dp, RoundedCornerShape(15.dp)),
+                    height = 110
+                )
+
+                Text(
+                    stringResource(R.string.date_and_place),
+                    modifier = Modifier.fillMaxWidth().padding(top = 25.dp, start = 16.dp),
+                    color = GrayTextColor,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+                DatePickerForBook(
+                    currentDate = state.selectedDate,
+                    currentTime = state.selectedStartTime,
+                    cabinet = state.cabinet,
+                    onCabinetChange = vm::onCabinetChange,
+                    onDateClick = { showDatePicker.value = true },
+                    onStartTimeClick = { showStartTimePicker.value = true },
+                    onEndTimeClick = { showEndTimePicker.value = true },
+                    endTime = state.selectedEndTime
+                )
+                Text(
+                    stringResource(R.string.participant),
+                    modifier = Modifier.fillMaxWidth().padding(top = 20.dp, start = 16.dp),
+                    color = GrayTextColor,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+                Box(
+                    Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 7.dp)
+                        .height(70.dp)
+                        .shadow(3.dp, RoundedCornerShape(15.dp))
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(Color.White)
+                ) {
+                    Column(Modifier.fillMaxSize()) {
+                        Row(
+                            Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 14.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "${state.selectedUsers.size} из 100",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Spacer(Modifier.width(10.dp))
+                            Box(Modifier.weight(1f)) {
+                                CustomTextField2(
+                                    value = state.searchQuery,
+                                    onValueChange = vm::onSearchQueryChange,
+                                    placeholder = stringResource(R.string.search),
+                                    height = 40,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                    }
+                }
+                Spacer(Modifier.height(5.dp))
+                if (state.selectedUsers.isNotEmpty()) {
+                    val selectedUserDetails =
+                        state.searchResults.filter { it.id in state.selectedUsers }
+                    if (selectedUserDetails.isNotEmpty()) {
+                        Text(
+                            "Выбранные участники:",
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(start = 16.dp, bottom = 8.dp),
+                            color = GrayTextColor,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp
+                        )
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            selectedUserDetails.forEach { user ->
+                                Card(
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = BlueMain.copy(alpha = 0.1f)
+                                    ),
+                                    modifier = Modifier.padding(2.dp)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(
+                                            horizontal = 8.dp,
+                                            vertical = 4.dp
+                                        )
+                                    ) {
+                                        AsyncImage(
+                                            model = user.photoUrl,
+                                            contentDescription = "",
+                                            modifier = Modifier.size(24.dp).clip(CircleShape),
+                                            error = painterResource(R.drawable.ic_launcher_foreground)
+                                        )
+                                        Spacer(Modifier.width(6.dp))
+                                        Text(
+                                            "${user.firstName} ${user.secondName}",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                        Spacer(Modifier.width(4.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .size(16.dp)
+                                                .clickable { vm.removeParticipant(user.id) }
+                                        ) {
+                                            Text(
+                                                "×",
+                                                fontSize = 14.sp,
+                                                color = Color.Red,
+                                                modifier = Modifier.align(Alignment.Center)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+                }
+
+                if (state.isLoading && state.searchResults.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(100.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        selectedUserDetails.forEach { user ->
+                        CircularProgressIndicator(color = BlueMain)
+                    }
+                } else if (state.searchResults.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp, max = 400.dp),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp),
+                        state = lazyListState
+                    ) {
+                        items(state.searchResults) { user ->
+                            val isSelected = user.id in state.selectedUsers
+
                             Card(
                                 colors = CardDefaults.cardColors(
-                                    containerColor = BlueMain.copy(alpha = 0.1f)
+                                    containerColor = if (isSelected) BlueMain.copy(alpha = 0.1f) else Color.White
                                 ),
-                                modifier = Modifier.padding(2.dp)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                                    .border(
+                                        width = if (isSelected) 2.dp else 1.dp,
+                                        color = if (isSelected) BlueMain else Color.LightGray.copy(
+                                            alpha = 0.3f
+                                        ),
+                                        shape = RoundedCornerShape(8.dp)
+                                    ),
+                                onClick = {
+                                    if (isSelected) {
+                                        vm.removeParticipant(user.id)
+                                    } else {
+                                        if (state.selectedUsers.size < 100) {
+                                            vm.addParticipant(user)
+                                        }
+                                    }
+                                }
                             ) {
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     AsyncImage(
                                         model = user.photoUrl,
-                                        contentDescription = "",
-                                        modifier = Modifier.size(24.dp).clip(CircleShape),
+                                        contentDescription = "${user.firstName} ${user.secondName}",
+                                        modifier = Modifier.size(40.dp).clip(CircleShape),
                                         error = painterResource(R.drawable.ic_launcher_foreground)
                                     )
-                                    Spacer(Modifier.width(6.dp))
-                                    Text(
-                                        "${user.firstName} ${user.secondName}",
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Normal
-                                    )
-                                    Spacer(Modifier.width(4.dp))
-                                    Box(
-                                        modifier = Modifier
-                                            .size(16.dp)
-                                            .clickable { vm.removeParticipant(user.id) }
-                                    ) {
+                                    Spacer(Modifier.width(12.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            "×",
-                                            fontSize = 14.sp,
-                                            color = Color.Red,
-                                            modifier = Modifier.align(Alignment.Center)
+                                            "${user.firstName} ${user.secondName}",
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 16.sp
                                         )
                                     }
-                                }
-                            }
-                        }
-                    }
-                    Spacer(Modifier.height(8.dp))
-                }
-            }
-
-            if (state.isLoading && state.searchResults.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxWidth().height(100.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = BlueMain)
-                }
-            } else if (state.searchResults.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp),
-                    state = lazyListState
-                ) {
-                    items(state.searchResults) { user ->
-                        val isSelected = user.id in state.selectedUsers
-
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (isSelected) BlueMain.copy(alpha = 0.1f) else Color.White
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                                .border(
-                                    width = if (isSelected) 2.dp else 1.dp,
-                                    color = if (isSelected) BlueMain else Color.LightGray.copy(alpha = 0.3f),
-                                    shape = RoundedCornerShape(8.dp)
-                                ),
-                            onClick = {
-                                if (isSelected) {
-                                    vm.removeParticipant(user.id)
-                                } else {
-                                    if (state.selectedUsers.size < 100) {
-                                        vm.addParticipant(user)
-                                    }
-                                }
-                            }
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                AsyncImage(
-                                    model = user.photoUrl,
-                                    contentDescription = "${user.firstName} ${user.secondName}",
-                                    modifier = Modifier.size(40.dp).clip(CircleShape),
-                                    error = painterResource(R.drawable.ic_launcher_foreground)
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        "${user.firstName} ${user.secondName}",
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 16.sp
-                                    )
-                                }
-                                if (isSelected) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(20.dp)
-                                            .background(BlueMain, CircleShape)
-                                    ) {
-                                        Text(
-                                            "✓",
-                                            color = Color.White,
-                                            fontSize = 12.sp,
-                                            modifier = Modifier.align(Alignment.Center)
-                                        )
-                                    }
-                                } else {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(20.dp)
-                                            .border(
-                                                width = 2.dp,
-                                                color = Color.LightGray,
-                                                shape = CircleShape
+                                    if (isSelected) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(20.dp)
+                                                .background(BlueMain, CircleShape)
+                                        ) {
+                                            Text(
+                                                "✓",
+                                                color = Color.White,
+                                                fontSize = 12.sp,
+                                                modifier = Modifier.align(Alignment.Center)
                                             )
-                                    )
+                                        }
+                                    } else {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(20.dp)
+                                                .border(
+                                                    width = 2.dp,
+                                                    color = Color.LightGray,
+                                                    shape = CircleShape
+                                                )
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    item {
-                        if (state.isLoading && state.searchResults.isNotEmpty()) {
-                            Box(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(color = BlueMain)
-                            }
-                        } else if (!state.isLastPage && state.searchQuery.isNotEmpty()) {
-                            LaunchedEffect(lazyListState) {
-                                if (lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ==
-                                    lazyListState.layoutInfo.totalItemsCount - 1) {
-                                    vm.searchUsers()
+                        item {
+                            if (state.isLoading && state.searchResults.isNotEmpty()) {
+                                Box(
+                                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(color = BlueMain)
+                                }
+                            } else if (!state.isLastPage && state.searchQuery.isNotEmpty()) {
+                                LaunchedEffect(lazyListState) {
+                                    if (lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ==
+                                        lazyListState.layoutInfo.totalItemsCount - 1
+                                    ) {
+                                        vm.searchUsers()
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            } else if (state.searchQuery.isNotEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxWidth().height(100.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Пользователи не найдены",
-                        color = GrayTextColor,
-                        fontSize = 14.sp
-                    )
+                } else if (state.searchQuery.isNotEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Пользователи не найдены",
+                            color = GrayTextColor,
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         }
