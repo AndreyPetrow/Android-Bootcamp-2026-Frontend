@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.sicampus.bootcamp2026.domain.entities.MeetingCreate
 import ru.sicampus.bootcamp2026.domain.usecase.meeting.CreateMeetingUseCase
@@ -20,46 +21,47 @@ class BookViewModel(
     val state: StateFlow<BookUiState> = _state.asStateFlow()
 
     fun onTitleChange(title: String) {
-        _state.value = _state.value.copy(title = title)
+        _state.update { it.copy(title = title, errorMessage = null) }
     }
 
     fun onDescriptionChange(description: String) {
-        _state.value = _state.value.copy(description = description)
+        _state.update { it.copy(description = description, errorMessage = null) }
     }
 
     fun onDateChange(date: LocalDate) {
-        _state.value = _state.value.copy(selectedDate = date)
+        _state.update { it.copy(selectedDate = date, errorMessage = null) }
     }
 
     fun onStartTimeChange(time: LocalTime) {
-        _state.value = _state.value.copy(selectedStartTime = time)
+        _state.update { it.copy(selectedStartTime = time, errorMessage = null) }
     }
 
     fun onEndTimeChange(time: LocalTime) {
-        _state.value = _state.value.copy(selectedEndTime = time)
+        _state.update { it.copy(selectedEndTime = time, errorMessage = null) }
     }
 
     fun onCabinetChange(cabinet: String) {
-        _state.value = _state.value.copy(cabinet = cabinet)
+        _state.update { it.copy(cabinet = cabinet, errorMessage = null) }
     }
 
     fun addParticipant(userId: Long) {
         if (!_state.value.selectedParticipants.contains(userId)) {
-            _state.value = _state.value.copy(
-                selectedParticipants = _state.value.selectedParticipants + userId
-            )
+            _state.update {
+                it.copy(selectedParticipants = _state.value.selectedParticipants + userId)
+            }
+
         }
     }
 
     fun removeParticipant(userId: Long) {
-        _state.value = _state.value.copy(
-            selectedParticipants = _state.value.selectedParticipants.filter { it != userId }
-        )
+        _state.update {
+            it.copy(selectedParticipants = _state.value.selectedParticipants.filter { it != userId })
+        }
     }
 
     fun createMeeting(organizerId: Long) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true, error = null)
+            _state.value = _state.value.copy(isLoading = true, errorMessage = null)
 
             val meetingData = MeetingCreate(
                 title = _state.value.title,
@@ -76,30 +78,34 @@ class BookViewModel(
 
             result.fold(
                 onSuccess = {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        isSuccess = true,
-                        title = "",
-                        description = "",
-                        selectedParticipants = emptyList(),
-                        cabinet = "Не выбрано"
-                    )
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isSuccess = true,
+                            title = "",
+                            description = "",
+                            selectedParticipants = emptyList(),
+                            cabinet = "Не выбрано"
+                        )
+                    }
                 },
                 onFailure = { error ->
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        error = error.message ?: "Ошибка создания встречи"
-                    )
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = error.message ?: "Ошибка создания встречи"
+                        )
+                    }
                 }
             )
         }
     }
 
     fun clearError() {
-        _state.value = _state.value.copy(error = null)
+        _state.update { it.copy(errorMessage = null) }
     }
 
     fun clearSuccess() {
-        _state.value = _state.value.copy(isSuccess = false)
+        _state.update { it.copy(isSuccess = false) }
     }
 }

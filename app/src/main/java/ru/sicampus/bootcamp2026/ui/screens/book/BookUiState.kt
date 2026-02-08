@@ -15,6 +15,6 @@ data class BookUiState(
     val searchQuery: String = "",
     val searchResults: List<UserMiniDto> = emptyList(),
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val errorMessage: String? = null,
     val isSuccess: Boolean = false
 )

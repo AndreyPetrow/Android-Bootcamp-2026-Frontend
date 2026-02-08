@@ -57,7 +57,6 @@ import androidx.navigation.NavHostController
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.root.RootActivity
 import ru.sicampus.bootcamp2026.ui.root.theme.BlueMain
-import ru.sicampus.bootcamp2026.utils.SettingsUtils
 import android.util.Patterns
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton

@@ -10,7 +10,7 @@ import ru.sicampus.bootcamp2026.domain.usecase.invitation.GetInvitationsUseCase
 import ru.sicampus.bootcamp2026.domain.usecase.invitation.RespondToInvitationUseCase
 
 object IncomingViewModelFactory {
-    fun create(context: Context): ViewModelProvider.Factory = viewModelFactory {
+    fun create(): ViewModelProvider.Factory = viewModelFactory {
         initializer {
             val meetingDataSource = MeetingDataSource()
             val meetingRepository = MeetingRepository(meetingDataSource)
