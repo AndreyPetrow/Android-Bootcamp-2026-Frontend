@@ -4,17 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -23,24 +13,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,21 +37,139 @@ import ru.sicampus.bootcamp2026.ui.root.theme.BlueMain
 import ru.sicampus.bootcamp2026.utils.TimeUtils
 import java.time.LocalDate
 import java.time.format.TextStyle
-import java.util.Locale
+import java.util.*
 
-
-data class TestBookData(
-    val id: Long = 0,
-    val title: String = "",
-    val address: String = "",
-    val description: String = "",
-    val organizerId: Long = 0,
-    val organizerName: String = "",
-    val date: Long? = null,
-    val timeStart: String = "",
-    val timeEnd: String = ""
+data class MockMeeting(
+    val id: Long,
+    val title: String,
+    val description: String?,
+    val timeStart: String,
+    val timeEnd: String,
+    val address: String
 )
 
+data class DayOfWeek(
+    val dayName: String,
+    val date: String,
+    val meetings: List<MockMeeting>
+)
+
+fun getMockWeekData(): List<DayOfWeek> {
+    return listOf(
+        DayOfWeek(
+            dayName = "Понедельник",
+            date = "2026-02-09",
+            meetings = listOf(
+                MockMeeting(
+                    id = 1,
+                    title = "Планерка",
+                    description = "Ежедневная планерка",
+                    timeStart = "09:00",
+                    timeEnd = "10:00",
+                    address = "Кабинет 101"
+                ),
+                MockMeeting(
+                    id = 2,
+                    title = "Совещание по проекту",
+                    description = "Обсуждение этапов проекта",
+                    timeStart = "11:00",
+                    timeEnd = "12:30",
+                    address = "Кабинет 102"
+                )
+            )
+        ),
+        DayOfWeek(
+            dayName = "Вторник",
+            date = "2026-02-10",
+            meetings = listOf(
+                MockMeeting(
+                    id = 3,
+                    title = "Встреча с клиентом",
+                    description = "Презентация нового продукта",
+                    timeStart = "14:00",
+                    timeEnd = "15:30",
+                    address = "Кабинет 201"
+                )
+            )
+        ),
+        DayOfWeek(
+            dayName = "Среда",
+            date = "2026-02-11",
+            meetings = emptyList()
+        ),
+        DayOfWeek(
+            dayName = "Четверг",
+            date = "2026-02-12",
+            meetings = listOf(
+                MockMeeting(
+                    id = 4,
+                    title = "Тренинг",
+                    description = "Тренинг по новым технологиям",
+                    timeStart = "10:00",
+                    timeEnd = "12:00",
+                    address = "Конференц-зал"
+                ),
+                MockMeeting(
+                    id = 5,
+                    title = "Обед с коллегами",
+                    description = null,
+                    timeStart = "13:00",
+                    timeEnd = "14:00",
+                    address = "Столовая"
+                ),
+                MockMeeting(
+                    id = 6,
+                    title = "Внутренний семинар",
+                    description = "Доклады отдела разработки",
+                    timeStart = "15:00",
+                    timeEnd = "17:00",
+                    address = "Актовый зал"
+                )
+            )
+        ),
+        DayOfWeek(
+            dayName = "Пятница",
+            date = "2026-02-13",
+            meetings = listOf(
+                MockMeeting(
+                    id = 7,
+                    title = "Подведение итогов недели",
+                    description = "Анализ выполненных задач",
+                    timeStart = "16:00",
+                    timeEnd = "17:00",
+                    address = "Кабинет 301"
+                ),
+                MockMeeting(
+                    id = 8,
+                    title = "Корпоративное мероприятие",
+                    description = "Празднование успешного завершения проекта",
+                    timeStart = "18:00",
+                    timeEnd = "20:00",
+                    address = "Ресторан"
+                )
+            )
+        ),
+        DayOfWeek(
+            dayName = "Суббота",
+            date = "2026-02-14",
+            meetings = emptyList()
+        ),
+        DayOfWeek(
+            dayName = "Воскресенье",
+            date = "2026-02-15",
+            meetings = listOf(
+                MockMeeting(
+                    id = 9,
+                    title = "Подготовка к следующей неделе",
+                    description = "Планирование задач",
+                    timeStart = "10:00",
+                    timeEnd = "11:00",
+                    address = "Дома"
+                )
+            )
+        )
+    )
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -90,6 +182,7 @@ fun ScheduleScreen(
     val uiState by viewModel.uiState.collectAsState()
     var isRefreshing by remember { mutableStateOf(false) }
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
     Box(
         modifier = Modifier
@@ -125,8 +218,6 @@ fun ScheduleScreen(
                     Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    DatePick(viewModel)
-                    var selectedIndex by remember { mutableIntStateOf(0) }
                     val options = listOf(
                         stringResource(R.string.day), stringResource(R.string.week),
                         stringResource(R.string.month)
@@ -139,8 +230,7 @@ fun ScheduleScreen(
                     ) {
                         options.forEachIndexed { index, label ->
                             SegmentedButton(
-                                modifier =
-                                    Modifier,
+                                modifier = Modifier,
                                 shape = SegmentedButtonDefaults.itemShape(
                                     index = index,
                                     count = options.size
@@ -161,22 +251,168 @@ fun ScheduleScreen(
             }
             Spacer(Modifier.size(10.dp))
 
-            when (uiState) {
-                is ScheduleState.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(64.dp)
-                        )
+            when (selectedIndex) {
+                0 -> {
+                    when (uiState) {
+                        is ScheduleState.Loading -> {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(64.dp)
+                                )
+                            }
+                        }
+
+                        is ScheduleState.DayData -> DayContent(viewModel, navController, index1)
+                        is ScheduleState.ErrorData -> ErrorContent(viewModel)
                     }
                 }
-
-                is ScheduleState.DayData -> DayContent(viewModel,navController, index1)
-                is ScheduleState.ErrorData -> ErrorContent(viewModel)
+                1 -> {
+                    val mockWeekData = remember { getMockWeekData() }
+                    WeekContent(mockWeekData, navController)
+                }
+                2 -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("Режим месяца в разработке")
+                    }
+                }
             }
+        }
+    }
+}
+@Composable
+private fun WeekContent(
+    weekData: List<DayOfWeek>,
+    navHostController: NavHostController
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) { items(weekData) { day -> DayCard(day = day) }
+    }
+}
+@Composable
+private fun DayCard(day: DayOfWeek) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp)),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = day.dayName,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = BlueMain,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
 
+            if (day.meetings.isEmpty()) {
+                Text(
+                    text = "Встреч нет",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+            } else {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    day.meetings.forEach { meeting ->
+                        MeetingItemCard(meeting = meeting)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MeetingItemCard(meeting: MockMeeting) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xffF5F7FF)
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(
+                text = meeting.title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            meeting.description?.let { description ->
+                if (description.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = description,
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.clock),
+                        contentDescription = "Time",
+                        modifier = Modifier.size(16.dp),
+                        tint = Color(0xff6151E8)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "${meeting.timeStart} - ${meeting.timeEnd}",
+                        fontSize = 12.sp,
+                        color = Color(0xff6151E8),
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.location),
+                        contentDescription = "Location",
+                        modifier = Modifier.size(16.dp),
+                        tint = Color.Black
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = meeting.address,
+                        fontSize = 12.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
     }
 }
@@ -445,4 +681,3 @@ fun DatePick(viewModel: ScheduleViewModel) {
         }
     }
 }
-
