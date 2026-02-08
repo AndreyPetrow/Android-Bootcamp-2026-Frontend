@@ -7,17 +7,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -63,7 +60,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.root.nav.ItemsNav
 import ru.sicampus.bootcamp2026.ui.root.theme.BlueMain
-import ru.sicampus.bootcamp2026.ui.screens.profile.ErrorContent
 import ru.sicampus.bootcamp2026.utils.TimeUtils
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -88,7 +84,8 @@ data class TestBookData(
 fun ScheduleScreen(
     context: Context,
     navController: NavHostController,
-    viewModel: ScheduleViewModel = viewModel(factory = ScheduleViewModelFactory.create(context))
+    viewModel: ScheduleViewModel = viewModel(factory = ScheduleViewModelFactory.create(context)),
+    index1: MutableState<Int>
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -176,7 +173,7 @@ fun ScheduleScreen(
                     }
                 }
 
-                is ScheduleState.DayData -> DayContent(viewModel)
+                is ScheduleState.DayData -> DayContent(viewModel,navController, index1)
                 is ScheduleState.ErrorData -> ErrorContent(viewModel)
             }
 
@@ -186,7 +183,9 @@ fun ScheduleScreen(
 
 @Composable
 fun DayContent(
-    viewModel: ScheduleViewModel
+    viewModel: ScheduleViewModel,
+    navHostController: NavHostController,
+    ind: MutableState<Int>
 ) {
     val state by viewModel.state.collectAsState()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -220,6 +219,7 @@ fun DayContent(
                 }
             }
         } else {
+
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -228,7 +228,11 @@ fun DayContent(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth(0.94f),
-                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        onClick = {
+                            ind.value = state.dayMeetings.indexOf(it)
+                            navHostController.navigate(ItemsNav.BottomNavItems[4].route)
+                        }
                     ) {
                         Row(Modifier.fillMaxWidth()) {
                             Box(
@@ -349,6 +353,7 @@ fun DayContent(
                         }
                     }
                     Spacer(Modifier.size(12.dp))
+
                 }
             }
         }
