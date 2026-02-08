@@ -15,6 +15,7 @@ import ru.sicampus.bootcamp2026.data.dto.invitation.InvitationRespondDto
 import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingCreateDto
 import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingDto
 import ru.sicampus.bootcamp2026.data.dto.meeting.MeetingMiniDto
+import ru.sicampus.bootcamp2026.ui.screens.profile.Content
 import java.time.LocalDate
 
 class MeetingDataSource {
@@ -29,7 +30,7 @@ class MeetingDataSource {
 
     suspend fun getMeetingById(id: Long): Result<MeetingDto> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = ApiClient.client.get(Constants.MEETING_ENDPOINT + id)
+            val result = ApiClient.client.get(Constants.MEETING_ENDPOINT + "/$id")
             result.body<MeetingDto>()
         }
     }
@@ -59,7 +60,7 @@ class MeetingDataSource {
 
     suspend fun getInvitations(): Result<List<InvitationDto>> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = ApiClient.client.get("invitation")
+            val result = ApiClient.client.get(Constants.INVITATION_ENDPOINT)
             result.body<List<InvitationDto>>()
         }
     }
@@ -67,7 +68,7 @@ class MeetingDataSource {
     suspend fun respondToInvitation(invitationId: Long, status: InvitationStatus): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
-                val result = ApiClient.client.put("invitation/respond") {
+                val result = ApiClient.client.put(Constants.INVITATION_ENDPOINT + "/respond") {
                     setBody(InvitationRespondDto(invitationId, status))
                 }
                 result.body<Unit>()

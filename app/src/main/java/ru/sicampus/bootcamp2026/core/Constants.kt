@@ -9,13 +9,16 @@ object Constants {
     const val REGISTER_ENDPOINT = "/api/v1/auth/register"
 
     // user
-    const val GET_BY_ID_ENDPOINT = "/api/v1/users/"
+    const val GET_BY_ID_ENDPOINT = "/api/v1/users"
     const val SEARCH_USERS_ENDPOINT = "/api/v1/users/search"
     const val UPDATE_USER_ENDPOINT = "/api/v1/users"
 
     // meeting
-    const val MEETING_ENDPOINT = "/meetings"
-    const val SHEDULE_ENDPOINT = "/meetings/schedule"
+    const val MEETING_ENDPOINT = "api/v1/meetings"
+    const val SHEDULE_ENDPOINT = "api/v1/meetings/schedule"
+
+    // invitation
+    const val INVITATION_ENDPOINT = "/api/v1/invitation"
 }
 
 /*

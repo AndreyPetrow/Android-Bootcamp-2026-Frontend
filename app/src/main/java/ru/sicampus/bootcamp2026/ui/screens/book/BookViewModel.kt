@@ -8,13 +8,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.sicampus.bootcamp2026.domain.entities.MeetingCreate
+import ru.sicampus.bootcamp2026.domain.entities.UserMini
 import ru.sicampus.bootcamp2026.domain.usecase.meeting.CreateMeetingUseCase
+import ru.sicampus.bootcamp2026.domain.usecase.user.SearchUserUseCase
+import ru.sicampus.bootcamp2026.utils.SettingsUtils
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
 class BookViewModel(
-    private val createMeetingUseCase: CreateMeetingUseCase
+    private val createMeetingUseCase: CreateMeetingUseCase,
+    private val searchUserUseCase: SearchUserUseCase,
+    private val settingsUtils: SettingsUtils
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BookUiState())
@@ -44,24 +49,83 @@ class BookViewModel(
         _state.update { it.copy(cabinet = cabinet, errorMessage = null) }
     }
 
-    fun addParticipant(userId: Long) {
-        if (!_state.value.selectedParticipants.contains(userId)) {
-            _state.update {
-                it.copy(selectedParticipants = _state.value.selectedParticipants + userId)
-            }
+    fun onSearchQueryChange(query: String) {
+        _state.update { it.copy(searchQuery = query, errorMessage = null) }
 
+        if (query.isNotEmpty() && query != _state.value.searchQuery) {
+            _state.update { it.copy(currentSearchPage = 0, isLastPage = false, searchResults = emptyList()) }
+            searchUsers(query, true)
+        }
+    }
+
+    fun searchUsers(query: String = _state.value.searchQuery, reset: Boolean = false) {
+        if (query.isEmpty() || _state.value.isSearching || _state.value.isLastPage) return
+
+        if (reset) _state.update { it.copy(currentSearchPage = 0, isLastPage = false) }
+
+        _state.update { it.copy(isLoading = true, errorMessage = null, isSearching = true) }
+
+        viewModelScope.launch {
+            val result = searchUserUseCase(query, _state.value.currentSearchPage, _state.value.pageSize)
+
+            result.fold(
+                onSuccess = { users ->
+                    val currentResults = if (reset) emptyList() else _state.value.searchResults
+                    val newResults = currentResults + users
+
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            searchResults = newResults.distinctBy { user -> user },
+                            isSearching = false
+                        )
+                    }
+
+                    _state.value.currentSearchPage++
+                    _state.value.isLastPage = users.size < _state.value.pageSize
+                },
+                onFailure = { error ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = error.message ?: "Ошибка поиска пользователей",
+                            isSearching = false
+                        )
+                    }
+                }
+            )
+
+            _state.value.isSearching = false
+        }
+    }
+
+    fun addParticipant(user: UserMini) {
+        if (!_state.value.selectedUsers.any { it == user.id }) {
+            _state.update {
+                it.copy(
+                    selectedUsers = _state.value.selectedUsers + user.id
+                )
+            }
         }
     }
 
     fun removeParticipant(userId: Long) {
         _state.update {
-            it.copy(selectedParticipants = _state.value.selectedParticipants.filter { it != userId })
+            it.copy(
+                selectedUsers = _state.value.selectedUsers.filter { it != userId }
+            )
         }
     }
 
-    fun createMeeting(organizerId: Long) {
+    fun createMeeting() {
+        val userId = settingsUtils.getUserId()
+        if (userId == -1L) {
+            _state.update { it.copy(errorMessage = "Пользователь не авторизован") }
+            return
+        }
+
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true, errorMessage = null)
+            _state.update { it.copy(isLoading = true, errorMessage = null) }
 
             val meetingData = MeetingCreate(
                 title = _state.value.title,
@@ -70,8 +134,8 @@ class BookViewModel(
                 date = _state.value.selectedDate.toString(),
                 timeStart = LocalDateTime.of(_state.value.selectedDate, _state.value.selectedStartTime),
                 timeEnd = LocalDateTime.of(_state.value.selectedDate, _state.value.selectedEndTime),
-                organizerId = organizerId,
-                participantIds = _state.value.selectedParticipants
+                organizerId = userId,
+                participantIds = _state.value.selectedUsers
             )
 
             val result = createMeetingUseCase(meetingData)
@@ -84,8 +148,10 @@ class BookViewModel(
                             isSuccess = true,
                             title = "",
                             description = "",
-                            selectedParticipants = emptyList(),
-                            cabinet = "Не выбрано"
+                            selectedUsers = emptyList(),
+                            cabinet = "Не выбрано",
+                            searchResults = emptyList(),
+                            searchQuery = ""
                         )
                     }
                 },
@@ -107,5 +173,15 @@ class BookViewModel(
 
     fun clearSuccess() {
         _state.update { it.copy(isSuccess = false) }
+    }
+
+    fun clearSearch() {
+        _state.update {
+            it.copy(
+                searchQuery = "",
+                searchResults = emptyList()
+            )
+        }
+        _state.update { it.copy(currentSearchPage = 0, isLastPage = false) }
     }
 }

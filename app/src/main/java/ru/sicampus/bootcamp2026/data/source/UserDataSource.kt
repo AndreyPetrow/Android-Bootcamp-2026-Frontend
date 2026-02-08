@@ -5,21 +5,21 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.sicampus.bootcamp2026.core.Constants
-import ru.sicampus.bootcamp2026.data.dto.auth.RegisterRequest
+import ru.sicampus.bootcamp2026.data.dto.PageDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserDto
+import ru.sicampus.bootcamp2026.data.dto.user.UserMiniDto
 import ru.sicampus.bootcamp2026.data.dto.user.UserUpdateDto
 
 class UserDataSource {
 
     suspend fun getUserById(token: String?, userId: Long): Result<UserDto> = withContext(Dispatchers.IO) {
         runCatching {
-            val response = ApiClient.client.get(Constants.GET_BY_ID_ENDPOINT + userId)
+            val response = ApiClient.client.get(Constants.GET_BY_ID_ENDPOINT + "/$userId")
 
             when (response.status) {
                 HttpStatusCode.OK -> response.body<UserDto>()
@@ -55,4 +55,27 @@ class UserDataSource {
         }
     }
 
+    suspend fun searchUsers(
+        token: String?,
+        searchQuery: String,
+        page: Int = 0,
+        size: Int = 10
+    ): Result<List<UserMiniDto>> = withContext(Dispatchers.IO) {
+        runCatching {
+            val response = ApiClient.client.get(Constants.SEARCH_USERS_ENDPOINT) {
+                header(HttpHeaders.Authorization, token)
+                url {
+                    parameters.append("search", searchQuery)
+                    parameters.append("page", page.toString())
+                    parameters.append("size", size.toString())
+                }
+            }
+
+            when (response.status) {
+                HttpStatusCode.OK ->  response.body<PageDto<UserMiniDto>>().content
+                HttpStatusCode.BadRequest -> error("Некорректные параметры поиска")
+                else -> error("Ошибка сервера: ${response.status}")
+            }
+        }
+    }
 }
