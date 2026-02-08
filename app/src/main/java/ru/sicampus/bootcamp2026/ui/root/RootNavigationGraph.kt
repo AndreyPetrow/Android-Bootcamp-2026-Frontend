@@ -48,7 +48,7 @@ fun AppNavHost(
         }
 
         composable(ItemsNav.BottomNavItems[3].route) {
-            BookScreen(navController)
+            BookScreen(navController, context)
         }
     }
 }

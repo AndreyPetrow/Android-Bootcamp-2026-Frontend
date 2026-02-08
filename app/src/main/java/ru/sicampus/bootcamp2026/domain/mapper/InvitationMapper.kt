@@ -4,6 +4,7 @@ import ru.sicampus.bootcamp2026.data.dto.invitation.InvitationDto
 import ru.sicampus.bootcamp2026.data.dto.invitation.UserMiniInvitationDto
 import ru.sicampus.bootcamp2026.domain.entities.Invitation
 import ru.sicampus.bootcamp2026.domain.entities.UserMiniInvitation
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 object InvitationMapper {
@@ -20,14 +21,25 @@ object InvitationMapper {
     }
 
     fun toDomain(dto: UserMiniInvitationDto): UserMiniInvitation {
-        return UserMiniInvitation(
-            id = dto.id,
-            firstName = dto.firstName,
-            secondName = dto.secondName,
-            photoUrl = dto.photoUrl,
-            status = dto.status,
-            respondedAt = LocalDateTime.parse(dto.respondedAt),
-        )
+        if (dto.respondedAt == null){
+            return UserMiniInvitation(
+                id = dto.id,
+                firstName = dto.firstName,
+                secondName = dto.secondName,
+                photoUrl = dto.photoUrl,
+                status = dto.status,
+                respondedAt = null
+            )
+            }else{
+            return UserMiniInvitation(
+                id = dto.id,
+                firstName = dto.firstName,
+                secondName = dto.secondName,
+                photoUrl = dto.photoUrl,
+                status = dto.status,
+                respondedAt = LocalDateTime.parse(dto.respondedAt)
+            )
+        }
     }
 
     fun toDto(domain: Invitation): InvitationDto {

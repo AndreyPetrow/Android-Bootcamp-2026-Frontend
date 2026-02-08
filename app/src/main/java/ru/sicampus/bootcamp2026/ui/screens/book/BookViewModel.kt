@@ -52,9 +52,12 @@ class BookViewModel(
     fun onSearchQueryChange(query: String) {
         _state.update { it.copy(searchQuery = query, errorMessage = null) }
 
-        if (query.isNotEmpty() && query != _state.value.searchQuery) {
+        if (state.value.searchQuery.isNotEmpty() ) {
             _state.update { it.copy(currentSearchPage = 0, isLastPage = false, searchResults = emptyList()) }
             searchUsers(query, true)
+        }else{
+            _state.update { it.copy(currentSearchPage = 0, isLastPage = false, searchResults = emptyList()) }
+            searchUsers("/|", true)
         }
     }
 

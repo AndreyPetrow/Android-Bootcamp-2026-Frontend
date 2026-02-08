@@ -63,7 +63,6 @@ class UserDataSource {
     ): Result<List<UserMiniDto>> = withContext(Dispatchers.IO) {
         runCatching {
             val response = ApiClient.client.get(Constants.SEARCH_USERS_ENDPOINT) {
-                header(HttpHeaders.Authorization, token)
                 url {
                     parameters.append("search", searchQuery)
                     parameters.append("page", page.toString())
