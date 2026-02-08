@@ -355,7 +355,7 @@ fun BookScreen(
                                     if (isSelected) {
                                         vm.removeParticipant(user.id)
                                     } else {
-                                        if (state.selectedUsers.size < 100) {
+                                        if (state.selectedUsers.size < 20) {
                                             vm.addParticipant(user)
                                         }
                                     }

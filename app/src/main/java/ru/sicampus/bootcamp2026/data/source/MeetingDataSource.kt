@@ -30,7 +30,13 @@ class MeetingDataSource {
                 val result = ApiClient.client.post(Constants.MEETING_ENDPOINT + "/create") {
                     setBody(meetingData)
                 }
-                result.body<MeetingDto>()
+
+                when (result.status) {
+                    HttpStatusCode.OK -> result.body<MeetingDto>()
+
+                    HttpStatusCode.Conflict -> error("Это время занято")
+                    else -> error("Ошибка сервера: ${result.status}")
+                }
             }
         }
 

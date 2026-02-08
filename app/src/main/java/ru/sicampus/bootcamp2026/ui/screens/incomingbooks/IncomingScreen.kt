@@ -26,6 +26,10 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +42,8 @@ import ru.sicampus.bootcamp2026.utils.TimeUtils
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.sicampus.bootcamp2026.R
 import java.time.Instant
 import java.time.LocalDate
@@ -75,10 +81,13 @@ fun IncomingScreen(
         when {
             !viewModel.state.collectAsState().value.isLoading -> {
                 val listIncoming = viewModel.state.collectAsState().value.invitations
-                val refreshState = rememberPullToRefreshState()
-                PullToRefreshBox(refreshState.isAnimating, onRefresh = {
-                    viewModel.loadInvitations()
-                }) {
+                var isRefreshing by remember { mutableStateOf(false) }
+                val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
+
+                SwipeRefresh(
+                    state = swipeRefreshState,
+                    onRefresh = { viewModel.loadInvitations() },
+                ) {
                     LazyColumn(
                         Modifier
                             .padding(top = (it1.calculateTopPadding().value + 20).dp)
@@ -95,7 +104,7 @@ fun IncomingScreen(
                                         .background(Color.White)
                                         .align(Alignment.Center)
                                 ) {
-                                    Column() {
+                                    Column {
                                         Row(
                                             Modifier.fillMaxWidth(),
                                             horizontalArrangement = Arrangement.SpaceBetween
@@ -199,11 +208,12 @@ fun IncomingScreen(
                                                 )
                                             }
                                         }
-                                        Spacer(Modifier.size(15.dp))
+                                        Spacer(Modifier.size(16.dp))
 
                                     }
                                 }
                             }
+                            Spacer(Modifier.size(16.dp))
                         }
                     }
                 }

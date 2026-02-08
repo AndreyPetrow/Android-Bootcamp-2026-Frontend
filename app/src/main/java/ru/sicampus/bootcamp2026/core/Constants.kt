@@ -2,7 +2,7 @@ package ru.sicampus.bootcamp2026.core
 
 object Constants {
 
-    const val BASE_URL = "http://192.168.1.11:8080"
+    const val BASE_URL = "http://192.168.1.14:8080"
 
     // auth
     const val LOGIN_ENDPOINT = "/api/v1/auth/login"
