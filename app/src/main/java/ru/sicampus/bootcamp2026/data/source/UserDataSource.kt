@@ -17,7 +17,7 @@ import ru.sicampus.bootcamp2026.data.dto.user.UserUpdateDto
 
 class UserDataSource {
 
-    suspend fun getUserById(token: String?, userId: Long): Result<UserDto> = withContext(Dispatchers.IO) {
+    suspend fun getUserById(userId: Long): Result<UserDto> = withContext(Dispatchers.IO) {
         runCatching {
             val response = ApiClient.client.get(Constants.GET_BY_ID_ENDPOINT + "/$userId")
 
@@ -31,7 +31,6 @@ class UserDataSource {
     }
 
     suspend fun updateUser(
-        token: String?,
         userId: Long,
         firstName: String,
         secondName: String,
@@ -41,7 +40,6 @@ class UserDataSource {
     ): Result<UserDto> = withContext(Dispatchers.IO) {
         runCatching {
             val response = ApiClient.client.post(Constants.UPDATE_USER_ENDPOINT) {
-                header(HttpHeaders.Authorization, token)
                 setBody(UserUpdateDto(userId, firstName, secondName, description, position, department))
             }
 
@@ -56,7 +54,6 @@ class UserDataSource {
     }
 
     suspend fun searchUsers(
-        token: String?,
         searchQuery: String,
         page: Int = 0,
         size: Int = 10

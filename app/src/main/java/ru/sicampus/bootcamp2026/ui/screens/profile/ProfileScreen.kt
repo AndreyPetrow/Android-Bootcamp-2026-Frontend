@@ -441,6 +441,7 @@ fun ErrorContent(viewModel: ProfileViewModel) {
     val state by viewModel.state.collectAsState()
 
     SwipeRefresh(
+        modifier = Modifier.fillMaxSize(),
         state = swipeRefreshState,
         onRefresh = { viewModel.load() },
     ) {

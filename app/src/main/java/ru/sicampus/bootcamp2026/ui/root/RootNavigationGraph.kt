@@ -36,11 +36,11 @@ fun AppNavHost(
         modifier = Modifier.padding(paddingValues = padding),
     ) {
         composable(ItemsNav.BottomNavItems[0].route) {
-            ScheduleScreen(navHostController = navController)
+            ScheduleScreen(context = context, navController = navController)
         }
 
         composable(ItemsNav.BottomNavItems[1].route) {
-            IncomingScreen()
+            IncomingScreen(context = context)
         }
 
         composable(ItemsNav.BottomNavItems[2].route) {

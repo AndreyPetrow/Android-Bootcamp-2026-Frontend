@@ -2,7 +2,7 @@ package ru.sicampus.bootcamp2026.core
 
 object Constants {
 
-    const val BASE_URL = "http://192.168.1.41:8080"
+    const val BASE_URL = "http://192.168.1.11:8080"
 
     // auth
     const val LOGIN_ENDPOINT = "/api/v1/auth/login"
@@ -16,6 +16,8 @@ object Constants {
     // meeting
     const val MEETING_ENDPOINT = "api/v1/meetings"
     const val SHEDULE_ENDPOINT = "api/v1/meetings/schedule"
+
+    const val DAY_SCHEDULE_ENDPOINT = "/api/v1/meetings/schedule/day"
 
     // invitation
     const val INVITATION_ENDPOINT = "/api/v1/invitation"

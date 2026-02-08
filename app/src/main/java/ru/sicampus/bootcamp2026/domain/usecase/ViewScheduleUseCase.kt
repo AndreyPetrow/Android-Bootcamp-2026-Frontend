@@ -11,11 +11,11 @@ class ViewScheduleUseCase(
         return meetingRepository.getDaySchedule(day)
     }
 
-    suspend fun getWeekSchedule(year: Int, week: Int): Result<Map<LocalDate, List<MeetingMini>>> {
-        return meetingRepository.getWeekSchedule(year, week)
-    }
-
-    suspend fun getMonthSchedule(year: Int, month: Int): Result<Map<LocalDate, List<MeetingMini>>> {
-        return meetingRepository.getMonthSchedule(year, month)
-    }
+//    suspend fun getWeekSchedule(year: Int, week: Int): Result<Map<LocalDate, List<MeetingMini>>> {
+//        return meetingRepository.getWeekSchedule(year, week)
+//    }
+//
+//    suspend fun getMonthSchedule(year: Int, month: Int): Result<Map<LocalDate, List<MeetingMini>>> {
+//        return meetingRepository.getMonthSchedule(year, month)
+//    }
 }
