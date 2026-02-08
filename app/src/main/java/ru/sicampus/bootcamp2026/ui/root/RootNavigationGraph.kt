@@ -1,6 +1,8 @@
 package ru.sicampus.bootcamp2026.ui.root
 
 import android.content.Context
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -42,6 +44,8 @@ fun AppNavHost(
         navController = navController,
         startDestination = ItemsNav.BottomNavItems[0].route,
         modifier = Modifier.padding(paddingValues = padding),
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
     ) {
         composable(ItemsNav.BottomNavItems[0].route) {
             ScheduleScreen(context = context, navController = navController,

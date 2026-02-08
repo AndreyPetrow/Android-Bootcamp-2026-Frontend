@@ -238,7 +238,7 @@ fun BookScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                "${state.selectedUsers.size} из 100",
+                                "${state.selectedUsers.size} из 20",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold
                             )

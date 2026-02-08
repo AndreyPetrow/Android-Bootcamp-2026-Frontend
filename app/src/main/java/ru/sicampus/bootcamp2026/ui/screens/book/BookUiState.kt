@@ -10,7 +10,7 @@ data class BookUiState(
     val selectedDate: LocalDate = LocalDate.now(),
     val selectedStartTime: LocalTime = LocalTime.now().withMinute(0).plusHours(2),
     val selectedEndTime: LocalTime = LocalTime.now().withMinute(0).plusHours(3),
-    val cabinet: String = "Не выбрано",
+    val cabinet: String = "",
     val selectedUsers: List<Long> = emptyList(),
     val searchQuery: String = "",
     val searchResults: List<UserMini> = emptyList(),

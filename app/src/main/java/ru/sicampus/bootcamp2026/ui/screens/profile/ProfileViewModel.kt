@@ -12,13 +12,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.domain.usecase.user.GetUserByIdUseCase
+import ru.sicampus.bootcamp2026.domain.usecase.user.SearchUserUseCase
 import ru.sicampus.bootcamp2026.domain.usecase.user.UserUpdateUseCase
 import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 
 class ProfileViewModel(
     private val getUserByIdUseCase: GetUserByIdUseCase,
-    private val updateUseCase: UserUpdateUseCase
+    private val updateUseCase: UserUpdateUseCase,
+    private val searchUserUserCase: SearchUserUseCase
 ) : ViewModel() {
     private val settingsUtils = SettingsUtils(App.context)
 
@@ -101,6 +103,13 @@ class ProfileViewModel(
         }
     }
 
+    private fun searchUsers() {
+
+        _uiState.update { ProfileState.Loading }
+
+
+    }
+
     fun navigate(actionState: ActionState) {
         viewModelScope.launch {
             _navigationEvents.send(actionState)
@@ -109,6 +118,10 @@ class ProfileViewModel(
 
     fun load() {
         loadUserData()
+    }
+
+    fun startSearch() {
+        _uiState.update { ProfileState.Search }
     }
 
     fun startUprate() {
@@ -146,6 +159,10 @@ class ProfileViewModel(
 
     fun onDescriptionChange(description: String) {
         _state.update { it.copy(updateDescription = description) }
+    }
+
+    fun onSearchChange(search: String) {
+        _state.update { it.copy(search = search) }
     }
 
 //    fun onEditClick() {

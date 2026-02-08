@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -34,10 +36,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,9 +69,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.serialization.Contextual
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.login.LoginActivity
+import ru.sicampus.bootcamp2026.ui.root.theme.BackgroundColor
 import ru.sicampus.bootcamp2026.ui.root.theme.BlueMain
 import ru.sicampus.bootcamp2026.ui.root.theme.GrayTextColor
 import ru.sicampus.bootcamp2026.ui.root.theme.Typography
@@ -79,7 +86,7 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(BackgroundColor),) {
         when (uiState) {
             is ProfileState.Loading -> {
                 Box(
@@ -95,6 +102,7 @@ fun ProfileScreen(
             is ProfileState.Data -> Content(viewModel)
             is ProfileState.EditData -> EditContent(viewModel)
             is ProfileState.Error -> ErrorContent(viewModel)
+            is ProfileState.Search -> SearchContent(viewModel)
         }
     }
 }
@@ -110,24 +118,50 @@ fun Content(viewModel: ProfileViewModel) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 
         OutlinedTextField(
-            leadingIcon = { Icon(Icons.Outlined.Search, "") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.Search,
+                    contentDescription = ""
+                )
+            },
             value = searchText.value,
             onValueChange = { searchText.value = it },
             label = {
                 Text(
-                    stringResource(R.string.search), style =
-                        Typography.bodyLarge
+                    text = stringResource(R.string.search),
+                    style = Typography.bodyLarge
                 )
             },
-            shape = RoundedCornerShape(15.dp),
-            modifier = Modifier.zIndex(1f).fillMaxWidth(0.95f)
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .zIndex(1f)
+                .fillMaxWidth(0.95f)
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null
+                ) {
+                    searchBtnHandler(viewModel)
+                },
+            enabled = false,
+            colors = TextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                disabledIndicatorColor = MaterialTheme.colorScheme.outline,
+                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
 
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = { viewModel.load() },
         ) {
-            LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            LazyColumn(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 item {
                     Spacer(Modifier.size(20.dp))
                     Card(
@@ -165,13 +199,21 @@ fun Content(viewModel: ProfileViewModel) {
                     ) {
                         Column {
                             if (state.position != null && state.position != "") {
-                                Column(Modifier.padding(top = 15.dp, start = 25.dp, bottom = 10.dp)) {
+                                Column(
+                                    Modifier.padding(
+                                        top = 15.dp,
+                                        start = 25.dp,
+                                        bottom = 10.dp
+                                    )
+                                ) {
                                     Text(
                                         state.position!!, fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                     Text(
-                                        stringResource(R.string.post), fontSize = 14.sp, color = Color(0xff636363),
+                                        stringResource(R.string.post),
+                                        fontSize = 14.sp,
+                                        color = Color(0xff636363),
                                         fontWeight = FontWeight.Medium
                                     )
                                     Spacer(Modifier.size(4.dp))
@@ -180,13 +222,21 @@ fun Content(viewModel: ProfileViewModel) {
                             }
 
                             if (state.department != null && state.department != "") {
-                                Column(Modifier.padding(top = 15.dp, start = 25.dp, bottom = 10.dp)) {
+                                Column(
+                                    Modifier.padding(
+                                        top = 15.dp,
+                                        start = 25.dp,
+                                        bottom = 10.dp
+                                    )
+                                ) {
                                     Text(
                                         state.department!!, fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                     Text(
-                                        stringResource(R.string.department), fontSize = 14.sp, color = Color(0xff636363),
+                                        stringResource(R.string.department),
+                                        fontSize = 14.sp,
+                                        color = Color(0xff636363),
                                         fontWeight = FontWeight.Medium
                                     )
                                     Spacer(Modifier.size(4.dp))
@@ -219,9 +269,15 @@ fun Content(viewModel: ProfileViewModel) {
                         onClick = {
                             viewModel.startUprate()
                         },
-                        modifier = Modifier.height(50.dp).fillMaxWidth(0.95f)
+                        modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth(0.95f)
                             .clip(RoundedCornerShape(15.dp))
-                            .border(1.dp, color = Color(0xff2F458B), shape = RoundedCornerShape(16.dp)),
+                            .border(
+                                1.dp,
+                                color = Color(0xff2F458B),
+                                shape = RoundedCornerShape(16.dp)
+                            ),
                         colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
                         Row(
@@ -245,21 +301,27 @@ fun Content(viewModel: ProfileViewModel) {
                             SettingsUtils(App.context).clear()
                             App.context.startActivity(
                                 Intent(App.context, LoginActivity::class.java).apply {
-                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 }
                             )
 
-                        }, modifier = Modifier.height(50.dp).fillMaxWidth(0.95f).clip(
-                            RoundedCornerShape(15.dp)
-                        ), colors = CardDefaults.cardColors(containerColor = Color(0xffFFBBBB))
+                        }, modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth(0.95f)
+                            .clip(
+                                RoundedCornerShape(15.dp)
+                            ), colors = CardDefaults.cardColors(containerColor = Color(0xffFFBBBB))
                     ) {
                         Row(
                             Modifier.fillMaxSize(),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(painterResource(R.drawable.exit_icon), "",
-                                tint = Color(0xffD50000))
+                            Icon(
+                                painterResource(R.drawable.exit_icon), "",
+                                tint = Color(0xffD50000)
+                            )
                             Spacer(Modifier.size(5.dp))
                             Text(
                                 stringResource(R.string.logout), color = Color(0xffD50000),
@@ -283,19 +345,41 @@ fun EditContent(viewModel: ProfileViewModel) {
     val searchText = remember { mutableStateOf("") }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-
         OutlinedTextField(
-            leadingIcon = { Icon(Icons.Outlined.Search, "") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.Search,
+                    contentDescription = ""
+                )
+            },
             value = searchText.value,
             onValueChange = { searchText.value = it },
             label = {
                 Text(
-                    stringResource(R.string.search), style =
-                        Typography.bodyLarge
+                    text = stringResource(R.string.search),
+                    style = Typography.bodyLarge
                 )
             },
-            shape = RoundedCornerShape(15.dp),
-            modifier = Modifier.zIndex(1f).fillMaxWidth(0.95f)
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .zIndex(1f)
+                .fillMaxWidth(0.95f)
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null
+                ) {
+                    searchBtnHandler(viewModel)
+                },
+            enabled = false,
+            colors = TextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                disabledContainerColor = BackgroundColor,
+                disabledIndicatorColor = MaterialTheme.colorScheme.outline,
+                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
 
         LazyColumn(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -331,7 +415,8 @@ fun EditContent(viewModel: ProfileViewModel) {
                             value = state.updateFirstName,
                             onValueChange = { viewModel.onFirstNameChange(it) },
                             placeholder = "Имя",
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
                                 .shadow(3.dp, RoundedCornerShape(15.dp)),
                             height = 50
                         )
@@ -340,7 +425,8 @@ fun EditContent(viewModel: ProfileViewModel) {
                             value = state.updateSecondName,
                             onValueChange = { viewModel.onSecondNameChange(it) },
                             placeholder = "Фамилия",
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
                                 .shadow(3.dp, RoundedCornerShape(15.dp)),
                             height = 50
                         )
@@ -349,7 +435,8 @@ fun EditContent(viewModel: ProfileViewModel) {
                             value = state.updatePosition,
                             onValueChange = { viewModel.onPositionChange(it) },
                             placeholder = "Должность",
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
                                 .shadow(3.dp, RoundedCornerShape(15.dp)),
                             height = 50
                         )
@@ -358,7 +445,8 @@ fun EditContent(viewModel: ProfileViewModel) {
                             value = state.updateDepartment,
                             onValueChange = { viewModel.onDepartmentChange(it) },
                             placeholder = "Отдел",
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
                                 .shadow(3.dp, RoundedCornerShape(15.dp)),
                             height = 50
                         )
@@ -367,7 +455,8 @@ fun EditContent(viewModel: ProfileViewModel) {
                             value = state.updateDescription,
                             onValueChange = { viewModel.onDescriptionChange(it) },
                             placeholder = "О себе",
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
                                 .shadow(3.dp, RoundedCornerShape(15.dp)),
                             height = 50
                         )
@@ -379,7 +468,9 @@ fun EditContent(viewModel: ProfileViewModel) {
                     onClick = {
                         viewModel.update()
                     },
-                    modifier = Modifier.height(50.dp).fillMaxWidth(0.95f)
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth(0.95f)
                         .clip(RoundedCornerShape(15.dp))
                         .border(1.dp, color = Color(0xff2F458B), shape = RoundedCornerShape(16.dp)),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -405,30 +496,36 @@ fun EditContent(viewModel: ProfileViewModel) {
                         SettingsUtils(App.context).clear()
                         App.context.startActivity(
                             Intent(App.context, LoginActivity::class.java).apply {
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             }
                         )
 
-                    }, modifier = Modifier.height(50.dp).fillMaxWidth(0.95f).clip(
-                        RoundedCornerShape(15.dp)
-                    ), colors = CardDefaults.cardColors(containerColor = Color(0xffFFBBBB))
+                    }, modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth(0.95f)
+                        .clip(
+                            RoundedCornerShape(15.dp)
+                        ), colors = CardDefaults.cardColors(containerColor = Color(0xffFFBBBB))
                 ) {
                     Row(
                         Modifier.fillMaxSize(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(painterResource(R.drawable.exit_icon), "",
-                            tint = Color(0xffD50000))
+                        Icon(
+                            painterResource(R.drawable.exit_icon), "",
+                            tint = Color(0xffD50000)
+                        )
                         Spacer(Modifier.size(5.dp))
                         Text(
                             stringResource(R.string.logout), color = Color(0xffD50000),
-                                style = Typography.bodyLarge, fontWeight = FontWeight.SemiBold
-                            )
-                        }
+                            style = Typography.bodyLarge, fontWeight = FontWeight.SemiBold
+                        )
                     }
-                    Spacer(Modifier.size(20.dp))
                 }
+                Spacer(Modifier.size(20.dp))
+            }
 
         }
     }
@@ -460,6 +557,46 @@ fun ErrorContent(viewModel: ProfileViewModel) {
             )
         }
     }
+}
+
+@Composable
+fun SearchContent(
+    viewModel: ProfileViewModel
+) {
+    val state by viewModel.state.collectAsState()
+
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        OutlinedTextField(
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.Search,
+                    contentDescription = ""
+                )
+            },
+            value = state.search,
+            onValueChange = { viewModel.onSearchChange(it) },
+            label = {
+                Text(
+                    text = stringResource(R.string.search),
+                    style = Typography.bodyLarge
+                )
+            },
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .zIndex(1f)
+                .fillMaxWidth(0.95f)
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null
+                ) {
+                    searchBtnHandler(viewModel)
+                }
+        )
+    }
+}
+
+private fun searchBtnHandler(viewModel: ProfileViewModel) {
+    viewModel.startSearch()
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -536,7 +673,7 @@ fun CustomTextField8(
                         if (value?.isEmpty() ?: true) {
                             Text(
                                 text = placeholder,
-                                color =GrayTextColor,
+                                color = GrayTextColor,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.SemiBold
                             )

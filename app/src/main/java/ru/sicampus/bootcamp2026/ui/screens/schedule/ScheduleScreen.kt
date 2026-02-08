@@ -218,6 +218,9 @@ fun ScheduleScreen(
                     Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    DatePick(viewModel)
+                    // var selectedIndex by remember { mutableIntStateOf(0) }
+
                     val options = listOf(
                         stringResource(R.string.day), stringResource(R.string.week),
                         stringResource(R.string.month)
@@ -481,7 +484,7 @@ fun DayContent(
                                         )
                                     )
                                     .zIndex(1f)
-                                    .height(if (it.description != null) 120.dp else 86.dp)
+                                    .height(if (it.description != null) (if (it.description.length > 41) 140.dp else 120.dp) else 86.dp)
                                     .background(BlueMain.copy(0.7f))
                             )
 
@@ -498,7 +501,7 @@ fun DayContent(
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Text(
-                                        it.title,
+                                        if (it.title.length > 22) it.title.take(22) + "..." else it.title,
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.SemiBold
                                     )
@@ -520,7 +523,7 @@ fun DayContent(
                                         maxLines = 2,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    Spacer(Modifier.size(20.dp))
+                                    Spacer(Modifier.size(18.dp))
                                 }
 
                                 Row {

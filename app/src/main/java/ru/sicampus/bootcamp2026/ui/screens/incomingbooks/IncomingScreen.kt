@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import ru.sicampus.bootcamp2026.utils.TimeUtils
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,7 +88,7 @@ fun IncomingScreen(
                             Box(modifier = Modifier.fillMaxWidth()) {
                                 Box(
                                     modifier = Modifier
-                                        .fillMaxWidth(0.9f)
+                                        .fillMaxWidth(0.94f)
                                         .clip(
                                             RoundedCornerShape(20.dp)
                                         )
@@ -106,9 +107,9 @@ fun IncomingScreen(
                                                 )
                                             ) {
                                                 Text(
-                                                    it.title,
+                                                    if (it.title.length > 22) it.title.take(22) + "..." else it.title,
                                                     fontWeight = FontWeight.SemiBold,
-                                                    fontSize = 20.sp
+                                                    fontSize = 20.sp,
                                                 )
                                                 Text(
                                                     "От ${it.authorFirstName} ${it.authorSecondName}",
@@ -203,7 +204,6 @@ fun IncomingScreen(
                                     }
                                 }
                             }
-                            Spacer(Modifier.size(10.dp))
                         }
                     }
                 }
