@@ -17,7 +17,7 @@ class UserRepository(
     suspend fun getUserById(id: Long): Result<User> {
         authLocalDataSource.setToken(settingsUtils.getEmail()!!, settingsUtils.getPassword()!!)
 
-        return userDataSource.getUserById(authLocalDataSource.token, id).map { userDto ->
+        return userDataSource.getUserById(id).map { userDto ->
             UserMapper.toEntity(userDto)
         }
     }
@@ -33,7 +33,6 @@ class UserRepository(
         authLocalDataSource.setToken(settingsUtils.getEmail()!!, settingsUtils.getPassword()!!)
 
         return userDataSource.updateUser(
-            authLocalDataSource.token,
             userId,
             firstName,
             secondName,
@@ -53,7 +52,6 @@ class UserRepository(
         authLocalDataSource.setToken(settingsUtils.getEmail()!!, settingsUtils.getPassword()!!)
 
         return userDataSource.searchUsers(
-            authLocalDataSource.token,
             searchQuery,
             page,
             size
