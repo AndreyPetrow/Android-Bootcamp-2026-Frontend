@@ -203,6 +203,7 @@ fun IncomingScreen(
                                     }
                                 }
                             }
+                            Spacer(Modifier.size(10.dp))
                         }
                     }
                 }
