@@ -8,6 +8,7 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.sicampus.bootcamp2026.core.Constants
 import ru.sicampus.bootcamp2026.domain.entities.InvitationStatus
 import ru.sicampus.bootcamp2026.data.dto.invitation.InvitationDto
 import ru.sicampus.bootcamp2026.data.dto.invitation.InvitationRespondDto
@@ -19,7 +20,7 @@ import java.time.LocalDate
 class MeetingDataSource {
     suspend fun createMeeting(meetingData: MeetingCreateDto): Result<MeetingDto> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = ApiClient.client.post("meetings/create") {
+            val result = ApiClient.client.post(Constants.MEETING_ENDPOINT + "/create") {
                 setBody(meetingData)
             }
             result.body<MeetingDto>()
@@ -28,14 +29,14 @@ class MeetingDataSource {
 
     suspend fun getMeetingById(id: Long): Result<MeetingDto> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = ApiClient.client.get("meetings/$id")
+            val result = ApiClient.client.get(Constants.MEETING_ENDPOINT + id)
             result.body<MeetingDto>()
         }
     }
 
     suspend fun getDaySchedule(day: LocalDate): Result<List<MeetingMiniDto>> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = ApiClient.client.get("meetings/schedule/day?day=$day")
+            val result = ApiClient.client.get(Constants.SHEDULE_ENDPOINT + "/day?day=$day")
             result.body<List<MeetingMiniDto>>()
         }
     }
@@ -43,7 +44,7 @@ class MeetingDataSource {
     suspend fun getWeekSchedule(year: Int, week: Int): Result<Map<String, List<MeetingMiniDto>>> =
         withContext(Dispatchers.IO) {
             runCatching {
-                val result = ApiClient.client.get("meetings/schedule/week?year=$year&week=$week")
+                val result = ApiClient.client.get(Constants.SHEDULE_ENDPOINT + "/week?year=$year&week=$week")
                 result.body<Map<String, List<MeetingMiniDto>>>()
             }
         }
@@ -51,7 +52,7 @@ class MeetingDataSource {
     suspend fun getMonthSchedule(year: Int, month: Int): Result<Map<String, List<MeetingMiniDto>>> =
         withContext(Dispatchers.IO) {
             runCatching {
-                val result = ApiClient.client.get("meetings/schedule/month?year=$year&month=$month")
+                val result = ApiClient.client.get(Constants.SHEDULE_ENDPOINT + "/month?year=$year&month=$month")
                 result.body<Map<String, List<MeetingMiniDto>>>()
             }
         }

@@ -11,6 +11,9 @@ object Constants {
     // user
     const val GET_BY_ID_ENDPOINT = "/api/v1/users/"
 
+    // meeting
+    const val MEETING_ENDPOINT = "/meetings"
+    const val SHEDULE_ENDPOINT = "/meetings/schedule"
 }
 
 /*
