@@ -20,11 +20,11 @@ object BookViewModelFactory {
             val authLocalDataSource = AuthLocalDataSource
 
             val meetingDataSource = MeetingDataSource()
-            val meetingRepository = MeetingRepository(meetingDataSource, authLocalDataSource, settingsUtils)
+            val meetingRepository = MeetingRepository(meetingDataSource, authLocalDataSource)
             val createMeetingUseCase = CreateMeetingUseCase(meetingRepository)
 
             val userDataSource = UserDataSource()
-            val userRepository = UserRepository(userDataSource, authLocalDataSource, settingsUtils)
+            val userRepository = UserRepository(userDataSource)
             val searchUserUseCase = SearchUserUseCase(userRepository)
 
             BookViewModel(createMeetingUseCase, searchUserUseCase, settingsUtils)

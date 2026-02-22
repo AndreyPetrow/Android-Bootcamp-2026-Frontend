@@ -38,7 +38,7 @@ fun AppNavHost(
     padding: PaddingValues,
     context: Context
 ) {
-    val sviewModel: ScheduleViewModel = viewModel(factory = ScheduleViewModelFactory.create(context))
+    val sviewModel: ScheduleViewModel = viewModel(factory = ScheduleViewModelFactory.create())
     val index = remember { mutableStateOf(0) }
     NavHost(
         navController = navController,
@@ -48,16 +48,15 @@ fun AppNavHost(
         exitTransition = { ExitTransition.None },
     ) {
         composable(ItemsNav.BottomNavItems[0].route) {
-            ScheduleScreen(context = context, navController = navController,
-                sviewModel, index)
+            ScheduleScreen(navController = navController, sviewModel, index)
         }
 
         composable(ItemsNav.BottomNavItems[1].route) {
-            IncomingScreen(context = context)
+            IncomingScreen()
         }
 
         composable(ItemsNav.BottomNavItems[2].route) {
-            ProfileScreen(context = context)
+            ProfileScreen()
         }
 
         composable(ItemsNav.BottomNavItems[3].route) {

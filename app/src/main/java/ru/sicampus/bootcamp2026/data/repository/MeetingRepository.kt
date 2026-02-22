@@ -9,18 +9,14 @@ import ru.sicampus.bootcamp2026.domain.entities.MeetingCreate
 import ru.sicampus.bootcamp2026.domain.entities.MeetingMini
 import ru.sicampus.bootcamp2026.domain.mapper.InvitationMapper
 import ru.sicampus.bootcamp2026.domain.mapper.MeetingMapper
-import ru.sicampus.bootcamp2026.utils.SettingsUtils
 import java.time.LocalDate
 
 class MeetingRepository(
     private val meetingDataSource: MeetingDataSource,
     private val authLocalDataSource: AuthLocalDataSource,
-    private val settingsUtils: SettingsUtils
 ) {
 
     suspend fun getDaySchedule(day: LocalDate): Result<List<MeetingMini>> {
-        authLocalDataSource.setToken(settingsUtils.getEmail()!!, settingsUtils.getPassword()!!)
-
         return meetingDataSource.daySchedule(authLocalDataSource.token, day.toString()).map { meetingMiniDtos ->
             meetingMiniDtos.map { MeetingMapper.toDomain(it) }
         }
@@ -31,7 +27,17 @@ class MeetingRepository(
             MeetingMapper.toDomain(meetingDto)
         }
     }
-//
+
+    suspend fun getInvitations(): Result<List<Invitation>> {
+        return meetingDataSource.getInvitations().map { invitationDtos ->
+            invitationDtos.map { InvitationMapper.toDomain(it) }
+        }
+    }
+
+    suspend fun respondToInvitation(invitationId: Long, status: InvitationStatus): Result<Unit> {
+        return meetingDataSource.respondToInvitation(invitationId, status)
+    }
+
 //    suspend fun getMeetingById(id: Long): Result<Meeting> {
 //        return meetingDataSource.getMeetingById(id).map { meetingDto ->
 //            MeetingMapper.toDomain(meetingDto)
@@ -55,13 +61,4 @@ class MeetingRepository(
 //        }
 //    }
 //
-    suspend fun getInvitations(): Result<List<Invitation>> {
-        return meetingDataSource.getInvitations().map { invitationDtos ->
-            invitationDtos.map { InvitationMapper.toDomain(it) }
-        }
-    }
-
-    suspend fun respondToInvitation(invitationId: Long, status: InvitationStatus): Result<Unit> {
-        return meetingDataSource.respondToInvitation(invitationId, status)
-    }
 }

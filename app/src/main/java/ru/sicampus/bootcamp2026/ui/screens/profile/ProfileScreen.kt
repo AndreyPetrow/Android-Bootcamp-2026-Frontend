@@ -1,7 +1,6 @@
 package ru.sicampus.bootcamp2026.ui.screens.profile
 
 
-import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -23,8 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -42,7 +39,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,7 +65,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.serialization.Contextual
 import ru.sicampus.bootcamp2026.App
 import ru.sicampus.bootcamp2026.R
 import ru.sicampus.bootcamp2026.ui.login.LoginActivity
@@ -81,8 +76,7 @@ import ru.sicampus.bootcamp2026.utils.SettingsUtils
 
 @Composable
 fun ProfileScreen(
-    context: Context,
-    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory.create(context))
+    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory.create())
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

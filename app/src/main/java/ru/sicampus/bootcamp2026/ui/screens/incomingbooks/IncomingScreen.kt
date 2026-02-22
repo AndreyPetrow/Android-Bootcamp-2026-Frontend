@@ -1,6 +1,5 @@
 package ru.sicampus.bootcamp2026.ui.screens.incomingbooks
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,8 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,14 +34,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import ru.sicampus.bootcamp2026.utils.TimeUtils
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.sicampus.bootcamp2026.R
+import ru.sicampus.bootcamp2026.utils.TimeUtils
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -55,8 +51,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IncomingScreen(
-    context: Context,
-    viewModel: IncomingViewModel = viewModel(factory = IncomingViewModelFactory.create(context))
+    viewModel: IncomingViewModel = viewModel(factory = IncomingViewModelFactory.create())
 ) {
 
     Scaffold(
