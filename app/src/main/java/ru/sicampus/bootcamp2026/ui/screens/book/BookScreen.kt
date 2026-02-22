@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -268,13 +269,11 @@ fun BookScreen(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 14.sp
                         )
-                        FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 4.dp),
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            selectedUserDetails.forEach { user ->
+                            items(selectedUserDetails) { user ->
                                 Card(
                                     colors = CardDefaults.cardColors(
                                         containerColor = BlueMain.copy(alpha = 0.1f)

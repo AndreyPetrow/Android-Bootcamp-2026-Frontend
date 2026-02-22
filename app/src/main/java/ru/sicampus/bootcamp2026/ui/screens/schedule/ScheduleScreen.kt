@@ -20,6 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
@@ -683,7 +684,7 @@ fun DatePick(viewModel: ScheduleViewModel) {
             IconButton(onClick = {
                 viewModel.selectDate(state.selectedDate.minusDays(1))
             }, modifier = Modifier) {
-                Icon(Icons.Default.KeyboardArrowLeft, "")
+                Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, "")
             }
             Spacer(Modifier.weight(1f))
             Text(
